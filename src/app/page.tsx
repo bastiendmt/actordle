@@ -1,15 +1,17 @@
+import { Game } from '@/components/game';
 import { ActorsData, Configuration } from '@/types/types';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
+import React from 'react';
 import styles from './page.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
-const getActors = async (): Promise<ActorsData> => {
+const getActors = async (page = 1): Promise<ActorsData> => {
   const data = await fetch(
-    `https://api.themoviedb.org/3/person/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`
+    `https://api.themoviedb.org/3/person/popular?api_key=${TMDB_API_KEY}&language=en-US&page=${page}`
   );
   return data.json();
 };
@@ -24,23 +26,18 @@ const getConfiguration = async (): Promise<Configuration> => {
 export default async function Home() {
   const { results: actors } = await getActors();
   const configuration = await getConfiguration();
-  console.log(configuration);
-  const choices = actors.map((actor) => actor);
+
   const randomActor = actors[Math.floor(Math.random() * actors.length)];
 
   const imageURI = `${configuration.images.base_url}/w185/${randomActor.profile_path}`;
 
   return (
-    <main className={styles.main}>
-      <h1>Picked actor is {randomActor.name}</h1>
-      <Image src={imageURI} alt='Actor to guess' width={180} height={250} />
-      <select>
-        {choices.map((choice) => (
-          <option key={choice.id} value={choice.name}>
-            {choice.name}
-          </option>
-        ))}
-      </select>
-    </main>
+    <React.StrictMode>
+      <main className={styles.main}>
+        <h1>Picked actor is {randomActor.name}</h1>
+        <Image src={imageURI} alt='Actor to guess' width={180} height={250} />
+        <Game list={actors} actor={randomActor} />
+      </main>
+    </React.StrictMode>
   );
 }
