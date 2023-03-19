@@ -1,7 +1,7 @@
 'use client';
 
 import { Result } from '@/types/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const LIMIT = 6;
 
@@ -13,16 +13,16 @@ export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
   const [success, setSuccess] = useState(false);
   const [userChoice, setUserChoice] = useState<string>();
 
-  // useEffect(() => {
-  //   if (userInput !== '') {
-  //     const newList = filteredList.filter((actor) =>
-  //       actor.name.includes(userInput)
-  //     );
-  //     setFilteredList(newList);
-  //     console.log(userInput);
-  //     console.log(newList.length);
-  //   }
-  // }, [userInput]);
+  useEffect(() => {
+    if (userInput !== '') {
+      const newList = filteredList.filter((actor) =>
+        actor.name.toLowerCase().includes(userInput)
+      );
+      setFilteredList(newList);
+    } else {
+      setFilteredList(list);
+    }
+  }, [userInput]);
 
   const submitChoice = () => {
     if (!userChoice) return;
@@ -41,19 +41,21 @@ export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
   return (
     <>
       <div>Tries : {guesses.length + 1} / 6</div>
-      {/* <input
+      <input
         type='text'
         value={userInput}
-        onChange={(e) => setUserInput(e.target.value)}
-      ></input> */}
-      <select onChange={(e) => setUserChoice(e.target.value)}>
-        <option value=''></option>
+        onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+      ></input>
+      <div className='listContainer'>
         {filteredList.map((actor) => (
-          <option key={actor.id} value={actor.id}>
+          <div
+            key={actor.id}
+            onClick={() => setUserChoice(actor.id.toString())}
+          >
             {actor.name}
-          </option>
+          </div>
         ))}
-      </select>
+      </div>
       <button type='button' onClick={submitChoice}>
         send result
       </button>
