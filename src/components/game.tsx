@@ -78,7 +78,7 @@ export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
       <button type='button' onClick={submitChoice}>
         Submit
       </button>
-      {process.env.NODE_ENV && (
+      {process.env.NODE_ENV === 'development' && (
         <>
           <strong>actor: {actor.name}</strong>
           <i>_dev buttons_</i>
