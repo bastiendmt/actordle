@@ -65,7 +65,7 @@ export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
                 className={userChoice == actor.id.toString() ? 'active' : ''}
                 style={
                   userChoice == actor.id.toString()
-                    ? { backgroundColor: 'red' }
+                    ? { backgroundColor: 'teal' }
                     : {}
                 }
               >
@@ -76,9 +76,9 @@ export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
         </>
       )}
       <button type='button' onClick={submitChoice}>
-        send result
+        Submit
       </button>
-      {true && (
+      {process.env.NODE_ENV && (
         <>
           <strong>actor: {actor.name}</strong>
           <i>_dev buttons_</i>
