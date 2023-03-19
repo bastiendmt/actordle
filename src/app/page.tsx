@@ -34,7 +34,7 @@ export default async function Home() {
   return (
     <React.StrictMode>
       <main className={styles.main}>
-        <h1>Picked actor is {randomActor.name}</h1>
+        <h1>Actordle</h1>
         <Image src={imageURI} alt='Actor to guess' width={180} height={250} />
         <Game list={actors} actor={randomActor} />
       </main>
