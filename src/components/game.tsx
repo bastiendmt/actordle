@@ -78,8 +78,38 @@ export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
       <button type='button' onClick={submitChoice}>
         send result
       </button>
+      {true && (
+        <>
+          <strong>actor: {actor.name}</strong>
+          <i>_dev buttons_</i>
+          <button
+            onClick={() => {
+              setSuccess(true);
+              setEnd(true);
+            }}
+          >
+            WIN
+          </button>
+          <button
+            onClick={() => {
+              setSuccess(false);
+              setEnd(true);
+            }}
+          >
+            LOOSE
+          </button>
+        </>
+      )}
       {success && <h2>You win !</h2>}
-      {end && !success && <h2>You loose :(</h2>}
+      {end && !success && (
+        <>
+          <h2>You loose :(</h2>
+          <div>
+            Actor of the day is:
+            <h3>{actor.name}</h3>
+          </div>
+        </>
+      )}
     </>
   );
 };
