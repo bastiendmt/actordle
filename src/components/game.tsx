@@ -23,6 +23,7 @@ export const Game = ({
   const [success, setSuccess] = useState<boolean>(false);
   const [userChoice, setUserChoice] = useState<string>();
   const [end, setEnd] = useState<boolean>(false);
+  const [movieHints, setMovieHints] = useState(0);
 
   const [nameHint, setNameHint] = useState(
     actor.name.replace(/[a-zA-Z0-9]/gi, '_')
@@ -72,6 +73,12 @@ export const Game = ({
       const index = actor.name.indexOf(lastName);
       setNameHint((hidden) => replaceAt(hidden, index, actor.name[index]));
     }
+    if (hint === 3) {
+      setMovieHints(1);
+    }
+    if (hint === 4) {
+      setMovieHints(2);
+    }
   };
 
   const getHint = () => {
@@ -79,22 +86,30 @@ export const Game = ({
     showHint(guesses.length);
   };
 
-  return (
-    <>
+  const mostKnownFor = () => {
+    // TODO to memorize
+    const playedIn = actor.known_for.map((knownFor) => (
+      <div key={knownFor.id}>
+        <div>{knownFor.original_title}</div>
+        <Image
+          width={180}
+          height={100}
+          src={`${configuration.images.base_url}/w185/${knownFor.backdrop_path}`}
+          alt={knownFor.original_title || 'famous movie'}
+        />
+      </div>
+    ));
+    return (
       <div>
         <h3>Most known for</h3>
-        {actor.known_for.map((knownFor) => (
-          <div key={knownFor.id}>
-            <div>{knownFor.original_title}</div>
-            <Image
-              width={180}
-              height={100}
-              src={`${configuration.images.base_url}/w185/${knownFor.backdrop_path}`}
-              alt={knownFor.original_title || 'famous movie'}
-            />
-          </div>
-        ))}
+        {playedIn.slice(0, movieHints)}
       </div>
+    );
+  };
+
+  return (
+    <>
+      {mostKnownFor()}
       <div>{nameHint}</div>
       <div>Tries : {guesses.length + 1} / 6</div>
       {!end && (
