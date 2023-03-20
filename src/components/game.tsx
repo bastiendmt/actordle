@@ -1,6 +1,7 @@
 'use client';
 
 import { Result } from '@/types/types';
+import { replaceAt } from '@/utils/utils';
 import { useEffect, useState } from 'react';
 
 const LIMIT = 6;
@@ -13,6 +14,10 @@ export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
   const [success, setSuccess] = useState<boolean>(false);
   const [userChoice, setUserChoice] = useState<string>();
   const [end, setEnd] = useState<boolean>(false);
+
+  const [nameHint, setNameHint] = useState(
+    actor.name.replace(/[a-zA-Z0-9]/gi, '_')
+  );
 
   useEffect(() => {
     if (userInput === '') {
@@ -45,10 +50,24 @@ export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
     if (guesses.length >= 5) {
       setEnd(true);
     }
+    showHint(guesses.length);
   }, [guesses]);
+
+  const showHint = (hint: number) => {
+    if (hint === 1) {
+      const index = 0;
+      setNameHint((hidden) => replaceAt(hidden, index, actor.name[index]));
+    }
+    if (hint === 2) {
+      const lastName = actor.name.split(' ')[1];
+      const index = actor.name.indexOf(lastName);
+      setNameHint((hidden) => replaceAt(hidden, index, actor.name[index]));
+    }
+  };
 
   return (
     <>
+      <div>{nameHint}</div>
       <div>Tries : {guesses.length + 1} / 6</div>
       {!end && (
         <>
