@@ -65,6 +65,11 @@ export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
     }
   };
 
+  const getHint = () => {
+    addGuess((oldState) => [...oldState, '']);
+    showHint(guesses.length);
+  };
+
   return (
     <>
       <div>{nameHint}</div>
@@ -96,6 +101,9 @@ export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
       )}
       <button type='button' onClick={submitChoice}>
         Submit
+      </button>
+      <button type='button' onClick={getHint}>
+        Get a hint
       </button>
       {process.env.NODE_ENV === 'development' && (
         <>
