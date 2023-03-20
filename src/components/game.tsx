@@ -1,12 +1,21 @@
 'use client';
 
-import { Result } from '@/types/types';
+import { Configuration, Result } from '@/types/types';
 import { replaceAt } from '@/utils/utils';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 const LIMIT = 6;
 
-export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
+export const Game = ({
+  list,
+  actor,
+  configuration,
+}: {
+  list: Result[];
+  actor: Result;
+  configuration: Configuration;
+}) => {
   const [userInput, setUserInput] = useState('');
   const [filteredList, setFilteredList] = useState(list);
 
@@ -72,13 +81,26 @@ export const Game = ({ list, actor }: { list: Result[]; actor: Result }) => {
 
   return (
     <>
+      <div>
+        <h3>Most known for</h3>
+        {actor.known_for.map((knownFor) => (
+          <div key={knownFor.id}>
+            <div>{knownFor.original_title}</div>
+            <Image
+              width={180}
+              height={100}
+              src={`${configuration.images.base_url}/w185/${knownFor.backdrop_path}`}
+              alt={knownFor.original_title || 'famous movie'}
+            />
+          </div>
+        ))}
+      </div>
       <div>{nameHint}</div>
       <div>Tries : {guesses.length + 1} / 6</div>
       {!end && (
         <>
           <input
             type='text'
-            value={userInput}
             onChange={(e) => setUserInput(e.target.value.toLowerCase())}
           />
           <div className='listContainer'>

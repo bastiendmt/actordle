@@ -27,6 +27,8 @@ export default async function Home() {
   const { results: actors } = await getActors();
   const configuration = await getConfiguration();
 
+  // TODO filter only actors with known_for_department
+  // TODO pick one actor per day
   const randomActor = actors[Math.floor(Math.random() * actors.length)];
 
   const imageURI = `${configuration.images.base_url}/w185/${randomActor.profile_path}`;
@@ -36,7 +38,7 @@ export default async function Home() {
       <main className={styles.main}>
         <h1>Actordle</h1>
         <Image src={imageURI} alt='Actor to guess' width={180} height={250} />
-        <Game list={actors} actor={randomActor} />
+        <Game list={actors} actor={randomActor} configuration={configuration} />
       </main>
     </React.StrictMode>
   );
