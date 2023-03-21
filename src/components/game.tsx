@@ -65,19 +65,19 @@ export const Game = ({
 
   const showHint = (hint: number) => {
     if (hint === 1) {
+      setMovieHints(1);
+    }
+    if (hint === 2) {
+      setMovieHints(2);
+    }
+    if (hint === 3) {
       const index = 0;
       setNameHint((hidden) => replaceAt(hidden, index, actor.name[index]));
     }
-    if (hint === 2) {
+    if (hint === 4) {
       const lastName = actor.name.split(' ')[1];
       const index = actor.name.indexOf(lastName);
       setNameHint((hidden) => replaceAt(hidden, index, actor.name[index]));
-    }
-    if (hint === 3) {
-      setMovieHints(1);
-    }
-    if (hint === 4) {
-      setMovieHints(2);
     }
   };
 
