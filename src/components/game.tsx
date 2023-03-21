@@ -51,9 +51,15 @@ export const Game = ({
 
     addGuess((oldState) => [...oldState, userChoice]);
     if (userChoice === actor.id.toString()) {
-      setSuccess(true);
-      setEnd(true);
+      endGame(true);
     }
+  };
+
+  const endGame = (success: boolean) => {
+    setSuccess(success);
+    setEnd(true);
+    setMovieHints(3);
+    setNameHint(actor.name);
   };
 
   useEffect(() => {
@@ -109,8 +115,8 @@ export const Game = ({
 
   return (
     <>
-      {mostKnownFor()}
       <div>{nameHint}</div>
+      {mostKnownFor()}
       <div>Tries : {guesses.length + 1} / 6</div>
       {!end && (
         <>
@@ -142,28 +148,6 @@ export const Game = ({
       <button type='button' onClick={getHint}>
         Get a hint
       </button>
-      {process.env.NODE_ENV === 'development' && (
-        <>
-          <strong>actor: {actor.name}</strong>
-          <i>_dev buttons_</i>
-          <button
-            onClick={() => {
-              setSuccess(true);
-              setEnd(true);
-            }}
-          >
-            WIN
-          </button>
-          <button
-            onClick={() => {
-              setSuccess(false);
-              setEnd(true);
-            }}
-          >
-            LOOSE
-          </button>
-        </>
-      )}
       {success && <h2>You win !</h2>}
       {end && !success && (
         <>
@@ -172,6 +156,15 @@ export const Game = ({
             Actor of the day is:
             <h3>{actor.name}</h3>
           </div>
+        </>
+      )}
+
+      {process.env.NODE_ENV === 'development' && (
+        <>
+          <i>_debug section</i>
+          <strong>actor: {actor.name}</strong>
+          <button onClick={() => endGame(true)}>WIN</button>
+          <button onClick={() => endGame(false)}>LOOSE</button>
         </>
       )}
     </>
