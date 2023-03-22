@@ -56,8 +56,8 @@ export const Game = ({
   };
 
   const endGame = (success: boolean) => {
-    setSuccess(success);
     setEnd(true);
+    setSuccess(success);
     setMovieHints(3);
     setNameHint(actor.name);
   };
@@ -107,7 +107,7 @@ export const Game = ({
     ));
     return (
       <div>
-        <h3>Most known for</h3>
+        <h3 className='text-3xl font-bold'>Most known for</h3>
         {playedIn.slice(0, movieHints)}
       </div>
     );
