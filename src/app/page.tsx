@@ -3,7 +3,6 @@ import { ActorsData, Configuration } from '@/types/types';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import React from 'react';
-import styles from './page.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -35,9 +34,17 @@ export default async function Home() {
 
   return (
     <React.StrictMode>
-      <main className={styles.main}>
-        <h1>Actordle</h1>
-        <Image src={imageURI} alt='Actor to guess' width={180} height={250} />
+      <main className='flex min-h-screen flex-col items-center gap-2 p-4'>
+        <h1 className='scroll-m-20 text-3xl font-bold font-extrabold tracking-tight lg:text-5xl'>
+          Actordle
+        </h1>
+        <Image
+          src={imageURI}
+          alt='Actor to guess'
+          width={180}
+          height={250}
+          className='rounded-lg drop-shadow-lg'
+        />
         <Game list={actors} actor={randomActor} configuration={configuration} />
       </main>
     </React.StrictMode>

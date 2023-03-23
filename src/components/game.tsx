@@ -2,8 +2,12 @@
 
 import { Configuration, Result } from '@/types/types';
 import { replaceAt } from '@/utils/utils';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Separator } from './ui/seprator';
 
 const LIMIT = 6;
 
@@ -56,14 +60,14 @@ export const Game = ({
   };
 
   const endGame = (success: boolean) => {
-    setSuccess(success);
     setEnd(true);
+    setSuccess(success);
     setMovieHints(3);
     setNameHint(actor.name);
   };
 
   useEffect(() => {
-    if (guesses.length >= 5) {
+    if (guesses.length >= LIMIT) {
       setEnd(true);
     }
     showHint(guesses.length);
@@ -88,26 +92,33 @@ export const Game = ({
   };
 
   const getHint = () => {
+    if (guesses.length > LIMIT) return;
     addGuess((oldState) => [...oldState, '']);
     showHint(guesses.length);
   };
 
   const mostKnownFor = () => {
     // TODO to memorize
-    const playedIn = actor.known_for.map((knownFor) => (
-      <div key={knownFor.id}>
-        <div>{knownFor.original_title}</div>
-        <Image
-          width={180}
-          height={100}
-          src={`${configuration.images.base_url}/w185/${knownFor.backdrop_path}`}
-          alt={knownFor.original_title || 'famous movie'}
-        />
-      </div>
-    ));
+    const playedIn = actor.known_for.map((knownFor) => {
+      // console.log('most known rendered');
+      return (
+        <div key={knownFor.id} className='my-1'>
+          <div>{knownFor.original_title}</div>
+          <Image
+            width={180}
+            height={100}
+            src={`${configuration.images.base_url}/w185/${knownFor.backdrop_path}`}
+            alt={knownFor.original_title || 'famous movie'}
+            className='rounded-md drop-shadow-md'
+          />
+        </div>
+      );
+    });
     return (
       <div>
-        <h3>Most known for</h3>
+        <h3 className='text-2xl font-semibold tracking-tight'>
+          Most known for
+        </h3>
         {playedIn.slice(0, movieHints)}
       </div>
     );
@@ -115,57 +126,70 @@ export const Game = ({
 
   return (
     <>
-      <div>{nameHint}</div>
-      {mostKnownFor()}
-      <div>Tries : {guesses.length + 1} / 6</div>
+      <h2 className='scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
+        {nameHint}
+      </h2>
       {!end && (
         <>
-          <input
-            type='text'
+          <Input
             onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+            className='max-w-[18rem]'
           />
-          <div className='listContainer'>
-            {filteredList.map((actor) => (
-              <div
-                key={actor.id}
-                onClick={() => setUserChoice(actor.id.toString())}
-                className={userChoice == actor.id.toString() ? 'active' : ''}
-                style={
-                  userChoice == actor.id.toString()
-                    ? { backgroundColor: 'teal' }
-                    : {}
-                }
-              >
-                {actor.name}
-              </div>
-            ))}
-          </div>
+          <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
+            <div className='px-2'>
+              {filteredList.map((actor) => (
+                <div key={actor.id}>
+                  <div
+                    onClick={() => setUserChoice(actor.id.toString())}
+                    className={`
+                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200
+                    ${userChoice == actor.id.toString() ? 'bg-teal-200' : ''}
+                    `}
+                  >
+                    {actor.name}
+                  </div>
+                  <Separator className='my-4' />
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
         </>
       )}
-      <button type='button' onClick={submitChoice}>
-        Submit
-      </button>
-      <button type='button' onClick={getHint}>
-        Get a hint
-      </button>
-      {success && <h2>You win !</h2>}
+      <div>Tries : {guesses.length + 1} / 6</div>
+      <div className='flex gap-4'>
+        <Button variant='subtle' onClick={getHint}>
+          Get a hint
+        </Button>
+        <Button onClick={submitChoice}>Submit</Button>
+      </div>
+      {guesses.length > 0 && mostKnownFor()}
+      {success && (
+        <h3 className='text-2xl font-semibold tracking-tight text-green-600'>
+          You won !
+        </h3>
+      )}
       {end && !success && (
         <>
-          <h2>You loose :(</h2>
-          <div>
-            Actor of the day is:
-            <h3>{actor.name}</h3>
-          </div>
+          <h3 className='text-2xl font-semibold tracking-tight text-red-600'>
+            You lost :(
+          </h3>
+          <div>Maybe you will have more luck tomorrow</div>
         </>
       )}
 
       {process.env.NODE_ENV === 'development' && (
-        <>
+        <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
           <i>_debug section</i>
           <strong>actor: {actor.name}</strong>
-          <button onClick={() => endGame(true)}>WIN</button>
-          <button onClick={() => endGame(false)}>LOOSE</button>
-        </>
+          <div className='flex justify-center gap-2 p-2'>
+            <Button className='bg-emerald-400' onClick={() => endGame(true)}>
+              WIN
+            </Button>
+            <Button className='bg-red-400' onClick={() => endGame(false)}>
+              LOOSE
+            </Button>
+          </div>
+        </div>
       )}
     </>
   );
