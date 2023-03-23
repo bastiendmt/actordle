@@ -4,6 +4,7 @@ import { Configuration, Result } from '@/types/types';
 import { replaceAt } from '@/utils/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { Button } from './ui/Button';
 
 const LIMIT = 6;
 
@@ -107,7 +108,7 @@ export const Game = ({
     ));
     return (
       <div>
-        <h3 className='text-3xl font-bold'>Most known for</h3>
+        <h3>Most known for</h3>
         {playedIn.slice(0, movieHints)}
       </div>
     );
@@ -142,9 +143,8 @@ export const Game = ({
           </div>
         </>
       )}
-      <button type='button' onClick={submitChoice}>
-        Submit
-      </button>
+      <Button onClick={submitChoice}>Submit</Button>
+      {/* <button type='button'>Submit</button> */}
       <button type='button' onClick={getHint}>
         Get a hint
       </button>
