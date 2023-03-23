@@ -92,6 +92,7 @@ export const Game = ({
   };
 
   const getHint = () => {
+    if (guesses.length > LIMIT) return;
     addGuess((oldState) => [...oldState, '']);
     showHint(guesses.length);
   };
@@ -128,7 +129,6 @@ export const Game = ({
       <h2 className='scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
         {nameHint}
       </h2>
-      {mostKnownFor()}
       {!end && (
         <>
           <Input
@@ -162,6 +162,7 @@ export const Game = ({
         </Button>
         <Button onClick={submitChoice}>Submit</Button>
       </div>
+      {guesses.length > 0 && mostKnownFor()}
       {success && (
         <h3 className='text-2xl font-semibold tracking-tight text-green-600'>
           You won !
