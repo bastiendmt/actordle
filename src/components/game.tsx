@@ -132,11 +132,13 @@ export const Game = ({
       {!end && (
         <>
           <Input
+            placeholder='Filter'
             onChange={(e) => setUserInput(e.target.value.toLowerCase())}
             className='max-w-[18rem]'
           />
           <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
             <div className='px-2'>
+              <h4 className='my-4 text-sm font-medium leading-none'>Actors</h4>
               {filteredList.map((actor) => (
                 <div key={actor.id}>
                   <div
