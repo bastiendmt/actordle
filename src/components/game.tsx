@@ -99,7 +99,7 @@ export const Game = ({
   const mostKnownFor = () => {
     // TODO to memorize
     const playedIn = actor.known_for.map((knownFor) => {
-      console.log('most known rendered');
+      // console.log('most known rendered');
       return (
         <div key={knownFor.id} className='my-1'>
           <div>{knownFor.original_title}</div>
@@ -142,7 +142,7 @@ export const Game = ({
                   <div
                     onClick={() => setUserChoice(actor.id.toString())}
                     className={`
-                    cursor-pointer rounded-md p-2 transition duration-150 hover:bg-teal-200 
+                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200
                     ${userChoice == actor.id.toString() ? 'bg-teal-200' : ''}
                     `}
                   >
@@ -176,7 +176,7 @@ export const Game = ({
         </>
       )}
 
-      {process.env.NODE_ENV === 'development' && false && (
+      {process.env.NODE_ENV === 'development' && (
         <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
           <i>_debug section</i>
           <strong>actor: {actor.name}</strong>
