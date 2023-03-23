@@ -121,7 +121,6 @@ export const Game = ({
     <>
       <div>{nameHint}</div>
       {mostKnownFor()}
-      <div>Tries : {guesses.length + 1} / 6</div>
       {!end && (
         <>
           <Input onChange={(e) => setUserInput(e.target.value.toLowerCase())} />
@@ -144,6 +143,7 @@ export const Game = ({
           </ScrollArea>
         </>
       )}
+      <div>Tries : {guesses.length + 1} / 6</div>
       <div className='flex gap-4'>
         <Button variant='subtle' onClick={getHint}>
           Get a hint
@@ -162,22 +162,14 @@ export const Game = ({
       )}
 
       {process.env.NODE_ENV === 'development' && (
-        <div className='flex flex-col bg-zinc-200 align-middle'>
+        <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
           <i>_debug section</i>
           <strong>actor: {actor.name}</strong>
           <div className='flex justify-center gap-2 p-2'>
-            <Button
-              variant='outline'
-              className='bg-emerald-400'
-              onClick={() => endGame(true)}
-            >
+            <Button className='bg-emerald-400' onClick={() => endGame(true)}>
               WIN
             </Button>
-            <Button
-              variant='outline'
-              className='bg-red-400'
-              onClick={() => endGame(false)}
-            >
+            <Button className='bg-red-400' onClick={() => endGame(false)}>
               LOOSE
             </Button>
           </div>
