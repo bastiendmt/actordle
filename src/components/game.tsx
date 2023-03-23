@@ -98,18 +98,21 @@ export const Game = ({
 
   const mostKnownFor = () => {
     // TODO to memorize
-    const playedIn = actor.known_for.map((knownFor) => (
-      <div key={knownFor.id} className='my-1'>
-        <div>{knownFor.original_title}</div>
-        <Image
-          width={180}
-          height={100}
-          src={`${configuration.images.base_url}/w185/${knownFor.backdrop_path}`}
-          alt={knownFor.original_title || 'famous movie'}
-          className='rounded-md drop-shadow-md'
-        />
-      </div>
-    ));
+    const playedIn = actor.known_for.map((knownFor) => {
+      console.log('most known rendered');
+      return (
+        <div key={knownFor.id} className='my-1'>
+          <div>{knownFor.original_title}</div>
+          <Image
+            width={180}
+            height={100}
+            src={`${configuration.images.base_url}/w185/${knownFor.backdrop_path}`}
+            alt={knownFor.original_title || 'famous movie'}
+            className='rounded-md drop-shadow-md'
+          />
+        </div>
+      );
+    });
     return (
       <div>
         <h3 className='text-2xl font-semibold tracking-tight'>
@@ -133,14 +136,15 @@ export const Game = ({
             className='max-w-[18rem]'
           />
           <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
-            <div className='p-4'>
+            <div className='px-2'>
               {filteredList.map((actor) => (
                 <div key={actor.id}>
                   <div
                     onClick={() => setUserChoice(actor.id.toString())}
                     className={`
-                    cursor-pointer
-                    ${userChoice == actor.id.toString() ? 'bg-teal-500' : ''}`}
+                    cursor-pointer rounded-md p-2 transition duration-150 hover:bg-teal-200 
+                    ${userChoice == actor.id.toString() ? 'bg-teal-200' : ''}
+                    `}
                   >
                     {actor.name}
                   </div>
@@ -158,18 +162,21 @@ export const Game = ({
         </Button>
         <Button onClick={submitChoice}>Submit</Button>
       </div>
-      {success && <h2>You win !</h2>}
+      {success && (
+        <h3 className='text-2xl font-semibold tracking-tight text-green-600'>
+          You won !
+        </h3>
+      )}
       {end && !success && (
         <>
-          <h2>You loose :(</h2>
-          <div>
-            Actor of the day is:
-            <h3>{actor.name}</h3>
-          </div>
+          <h3 className='text-2xl font-semibold tracking-tight text-red-600'>
+            You lost :(
+          </h3>
+          <div>Maybe you will have more luck tomorrow</div>
         </>
       )}
 
-      {process.env.NODE_ENV === 'development' && (
+      {process.env.NODE_ENV === 'development' && false && (
         <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
           <i>_debug section</i>
           <strong>actor: {actor.name}</strong>
