@@ -4,8 +4,9 @@ Actordle is a daily game where you have to guess an actor name based on his pict
 
 ## Todos
 
-- [ ] add hints
-- [ ] add (tailwind)[https://tailwindcss.com/docs/guides/nextjs]
-- [ ] add (shadcn)[https://ui.shadcn.com/docs/primitives/button]
+- [x] add hints
+- [x] add (tailwind)[https://tailwindcss.com/docs/guides/nextjs]
+- [x] add (shadcn)[https://ui.shadcn.com/docs/primitives/button]
 
 - [ ] add additional round
+- [ ] add toast when nothing is selected
