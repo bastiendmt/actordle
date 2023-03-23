@@ -3,7 +3,6 @@ import { ActorsData, Configuration } from '@/types/types';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import React from 'react';
-import styles from './page.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -35,7 +34,7 @@ export default async function Home() {
 
   return (
     <React.StrictMode>
-      <main className={styles.main}>
+      <main className='flex min-h-screen flex-col items-center gap-2 p-4'>
         <h1 className='text-3xl font-bold'>Actordle</h1>
         <Image
           src={imageURI}
