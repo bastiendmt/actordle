@@ -2,10 +2,12 @@
 
 import { Configuration, Result } from '@/types/types';
 import { replaceAt } from '@/utils/utils';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { Separator } from './ui/seprator';
 
 const LIMIT = 6;
 
@@ -123,22 +125,23 @@ export const Game = ({
       {!end && (
         <>
           <Input onChange={(e) => setUserInput(e.target.value.toLowerCase())} />
-          <div className='listContainer'>
-            {filteredList.map((actor) => (
-              <div
-                key={actor.id}
-                onClick={() => setUserChoice(actor.id.toString())}
-                className={userChoice == actor.id.toString() ? 'active' : ''}
-                style={
-                  userChoice == actor.id.toString()
-                    ? { backgroundColor: 'teal' }
-                    : {}
-                }
-              >
-                {actor.name}
-              </div>
-            ))}
-          </div>
+          <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
+            <div className='p-4'>
+              {filteredList.map((actor) => (
+                <div key={actor.id}>
+                  <div
+                    onClick={() => setUserChoice(actor.id.toString())}
+                    className={`
+                    cursor-pointer
+                    ${userChoice == actor.id.toString() ? 'bg-teal-500' : ''}`}
+                  >
+                    {actor.name}
+                  </div>
+                  <Separator className='my-4' />
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
         </>
       )}
       <div className='flex gap-4'>
@@ -159,12 +162,26 @@ export const Game = ({
       )}
 
       {process.env.NODE_ENV === 'development' && (
-        <>
+        <div className='flex flex-col bg-zinc-200 align-middle'>
           <i>_debug section</i>
           <strong>actor: {actor.name}</strong>
-          <button onClick={() => endGame(true)}>WIN</button>
-          <button onClick={() => endGame(false)}>LOOSE</button>
-        </>
+          <div className='flex justify-center gap-2 p-2'>
+            <Button
+              variant='outline'
+              className='bg-emerald-400'
+              onClick={() => endGame(true)}
+            >
+              WIN
+            </Button>
+            <Button
+              variant='outline'
+              className='bg-red-400'
+              onClick={() => endGame(false)}
+            >
+              LOOSE
+            </Button>
+          </div>
+        </div>
       )}
     </>
   );
