@@ -35,13 +35,15 @@ export default async function Home() {
   return (
     <React.StrictMode>
       <main className='flex min-h-screen flex-col items-center gap-2 p-4'>
-        <h1 className='text-3xl font-bold'>Actordle</h1>
+        <h1 className='scroll-m-20 text-3xl font-bold font-extrabold tracking-tight lg:text-5xl'>
+          Actordle
+        </h1>
         <Image
           src={imageURI}
           alt='Actor to guess'
           width={180}
           height={250}
-          className='rounded-lg'
+          className='rounded-lg drop-shadow-lg'
         />
         <Game list={actors} actor={randomActor} configuration={configuration} />
       </main>

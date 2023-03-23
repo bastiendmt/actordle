@@ -99,19 +99,22 @@ export const Game = ({
   const mostKnownFor = () => {
     // TODO to memorize
     const playedIn = actor.known_for.map((knownFor) => (
-      <div key={knownFor.id}>
+      <div key={knownFor.id} className='my-1'>
         <div>{knownFor.original_title}</div>
         <Image
           width={180}
           height={100}
           src={`${configuration.images.base_url}/w185/${knownFor.backdrop_path}`}
           alt={knownFor.original_title || 'famous movie'}
+          className='rounded-md drop-shadow-md'
         />
       </div>
     ));
     return (
       <div>
-        <h3>Most known for</h3>
+        <h3 className='text-2xl font-semibold tracking-tight'>
+          Most known for
+        </h3>
         {playedIn.slice(0, movieHints)}
       </div>
     );
@@ -119,11 +122,16 @@ export const Game = ({
 
   return (
     <>
-      <div>{nameHint}</div>
+      <h2 className='scroll-m-20 border-b border-b-slate-200 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
+        {nameHint}
+      </h2>
       {mostKnownFor()}
       {!end && (
         <>
-          <Input onChange={(e) => setUserInput(e.target.value.toLowerCase())} />
+          <Input
+            onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+            className='max-w-[18rem]'
+          />
           <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
             <div className='p-4'>
               {filteredList.map((actor) => (
