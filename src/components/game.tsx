@@ -4,7 +4,7 @@ import { Configuration, Result } from '@/types/types';
 import { replaceAt } from '@/utils/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { Button } from './ui/Button';
+import { Button } from './ui/button';
 
 const LIMIT = 6;
 
@@ -64,7 +64,7 @@ export const Game = ({
   };
 
   useEffect(() => {
-    if (guesses.length >= 5) {
+    if (guesses.length >= LIMIT) {
       setEnd(true);
     }
     showHint(guesses.length);
@@ -143,11 +143,12 @@ export const Game = ({
           </div>
         </>
       )}
-      <Button onClick={submitChoice}>Submit</Button>
-      {/* <button type='button'>Submit</button> */}
-      <button type='button' onClick={getHint}>
-        Get a hint
-      </button>
+      <div className='flex gap-4'>
+        <Button variant='subtle' onClick={getHint}>
+          Get a hint
+        </Button>
+        <Button onClick={submitChoice}>Submit</Button>
+      </div>
       {success && <h2>You win !</h2>}
       {end && !success && (
         <>
