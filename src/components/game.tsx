@@ -5,6 +5,7 @@ import { replaceAt } from '@/utils/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
+import { Input } from './ui/input';
 
 const LIMIT = 6;
 
@@ -121,10 +122,7 @@ export const Game = ({
       <div>Tries : {guesses.length + 1} / 6</div>
       {!end && (
         <>
-          <input
-            type='text'
-            onChange={(e) => setUserInput(e.target.value.toLowerCase())}
-          />
+          <Input onChange={(e) => setUserInput(e.target.value.toLowerCase())} />
           <div className='listContainer'>
             {filteredList.map((actor) => (
               <div
