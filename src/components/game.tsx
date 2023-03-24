@@ -66,6 +66,10 @@ export const Game = ({
     setNameHint(actor.name);
   };
 
+  // useEffect(() => {
+  //   endGame(true);
+  // }, []);
+
   useEffect(() => {
     if (guesses.length >= LIMIT) {
       setEnd(true);
@@ -132,7 +136,7 @@ export const Game = ({
       {!end && (
         <>
           <Input
-            placeholder='Filter'
+            placeholder='Filter actors'
             onChange={(e) => setUserInput(e.target.value.toLowerCase())}
             className='max-w-[18rem]'
           />

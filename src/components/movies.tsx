@@ -9,22 +9,24 @@ import { Input } from './ui/input';
 export const Movies = ({ allMovies }: { allMovies: KnownFor[] }) => {
   const [userInput, setUserInput] = useState('');
 
-  allMovies.forEach((movie) => {
-    console.log(movie.original_title);
-  });
+  const filteredMovies = allMovies.filter(
+    (movie) =>
+      movie.name?.toLowerCase().includes(userInput) ||
+      movie.original_title?.toLowerCase().includes(userInput)
+  );
 
   return (
-    <div>
-      <h2>Movies</h2>
+    <>
+      <h2>Round 2, guess his movies</h2>
       <Input
-        placeholder='Filter'
+        placeholder='Filter movies'
         onChange={(e) => setUserInput(e.target.value.toLowerCase())}
         className='max-w-[18rem]'
       />
       <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
         <div className='px-2'>
           <h4 className='my-4 text-sm font-medium leading-none'>Movies</h4>
-          {allMovies.map((movie) => (
+          {filteredMovies.map((movie) => (
             <div key={movie.id}>
               <div
                 // onClick={() => setUserChoice(actor.id.toString())}
@@ -40,6 +42,6 @@ export const Movies = ({ allMovies }: { allMovies: KnownFor[] }) => {
           ))}
         </div>
       </ScrollArea>
-    </div>
+    </>
   );
 };
