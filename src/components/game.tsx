@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Separator } from './ui/seprator';
+import { H2, H3 } from './ui/titles';
 
 const LIMIT = 6;
 
@@ -120,9 +121,7 @@ export const Game = ({
     });
     return (
       <div>
-        <h3 className='text-2xl font-semibold tracking-tight'>
-          Most known for
-        </h3>
+        <H3>Most known for</H3>
         {playedIn.slice(0, movieHints)}
       </div>
     );
@@ -130,9 +129,7 @@ export const Game = ({
 
   return (
     <>
-      <h2 className='scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
-        {nameHint}
-      </h2>
+      <H2>{nameHint}</H2>
       {!end && (
         <>
           <Input
@@ -171,16 +168,10 @@ export const Game = ({
         </div>
       )}
       {guesses.length > 0 && mostKnownFor()}
-      {success && (
-        <h3 className='text-2xl font-semibold tracking-tight text-green-600'>
-          You won !
-        </h3>
-      )}
+      {success && <H3 classes='text-green-600'>You won !</H3>}
       {end && !success && (
         <>
-          <h3 className='text-2xl font-semibold tracking-tight text-red-600'>
-            You lost :(
-          </h3>
+          <H3 classes='text-red-600'>You lost :(</H3>
           <div>Maybe you will have more luck tomorrow</div>
         </>
       )}
