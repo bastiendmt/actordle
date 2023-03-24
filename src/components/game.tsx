@@ -162,12 +162,14 @@ export const Game = ({
         </>
       )}
       <div>Tries : {guesses.length + 1} / 6</div>
-      <div className='flex gap-4'>
-        <Button variant='subtle' onClick={getHint}>
-          Get a hint
-        </Button>
-        <Button onClick={submitChoice}>Submit</Button>
-      </div>
+      {!end && (
+        <div className='flex gap-4'>
+          <Button variant='subtle' onClick={getHint}>
+            Get a hint
+          </Button>
+          <Button onClick={submitChoice}>Submit</Button>
+        </div>
+      )}
       {guesses.length > 0 && mostKnownFor()}
       {success && (
         <h3 className='text-2xl font-semibold tracking-tight text-green-600'>
