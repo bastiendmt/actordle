@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Separator } from './ui/seprator';
+import { Separator } from './ui/separator';
 import { H2, H3 } from './ui/titles';
 
 const LIMIT = 6;
