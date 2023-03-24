@@ -67,9 +67,9 @@ export const Game = ({
     setNameHint(actor.name);
   };
 
-  // useEffect(() => {
-  //   endGame(true);
-  // }, []);
+  useEffect(() => {
+    endGame(true);
+  }, []);
 
   useEffect(() => {
     if (guesses.length >= LIMIT) {

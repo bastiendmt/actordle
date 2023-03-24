@@ -29,7 +29,8 @@ export default async function Home() {
 
   // TODO filter only actors with known_for_department
   // TODO pick one actor per day
-  const randomActor = actors[Math.floor(Math.random() * actors.length)];
+  const randomIndex = Math.floor(Math.random() * actors.length);
+  const randomActor = actors[randomIndex];
   const imageURI = `${configuration.images.base_url}/w185/${randomActor.profile_path}`;
 
   const allMovies: KnownFor[] = [];
@@ -37,6 +38,7 @@ export default async function Home() {
     console.log(actor.known_for.length);
     actor.known_for.forEach((movie) => allMovies.push(movie));
   });
+  const correctMovies = randomActor.known_for;
 
   return (
     <React.StrictMode>
@@ -52,7 +54,7 @@ export default async function Home() {
           className='rounded-lg drop-shadow-lg'
         />
         <Game list={actors} actor={randomActor} configuration={configuration} />
-        <Movies allMovies={allMovies} />
+        <Movies allMovies={allMovies} correctMovies={correctMovies} />
       </main>
     </React.StrictMode>
   );
