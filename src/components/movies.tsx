@@ -3,8 +3,8 @@
 import { Configuration, KnownFor, Result } from '@/types/types';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Separator } from '@radix-ui/react-separator';
+import Image from 'next/image';
 import { useState } from 'react';
-import { playedIn } from './playedIn';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { H2 } from './ui/titles';
@@ -57,6 +57,20 @@ export const Movies = ({
     // todo, reset userInput and userChoice ?
   };
 
+  const playedIn = (movies: KnownFor[]) =>
+    movies.map((movie) => (
+      <div key={movie.id} className='my-1'>
+        <div>{movie.original_title}</div>
+        <Image
+          width={180}
+          height={100}
+          src={`${configuration.images.base_url}/w185/${movie.backdrop_path}`}
+          alt={movie.original_title || 'famous movie'}
+          className='rounded-md drop-shadow-md'
+        />
+      </div>
+    ));
+
   return (
     <>
       <H2>Round 2, guess {correctActor.gender === 1 ? 'her' : 'his'} movies</H2>
@@ -98,7 +112,7 @@ export const Movies = ({
         You guessed <strong>{correctAnswer}</strong> / {correctMovies.length}
       </div>
 
-      {playedIn(moviesToRender, configuration)}
+      {playedIn(moviesToRender)}
     </>
   );
 };
