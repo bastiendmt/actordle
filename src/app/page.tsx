@@ -61,6 +61,7 @@ export default async function Home() {
         <Movies
           allMovies={allMovies}
           correctMovies={correctMovies}
+          correctActor={randomActor}
           configuration={configuration}
         />
       </main>

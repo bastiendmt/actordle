@@ -68,9 +68,9 @@ export const Game = ({
   };
 
   // Debug to 2n round
-  // useEffect(() => {
-  //   endGame(true);
-  // }, []);
+  useEffect(() => {
+    endGame(true);
+  }, []);
 
   useEffect(() => {
     if (guesses.length >= LIMIT) {
@@ -187,7 +187,7 @@ export const Game = ({
           <strong>actor: {correctActor.name}</strong>
           <div>
             {correctActor.known_for.map((movie) => (
-              <p key={movie.id}>{movie.original_name}</p>
+              <p key={movie.id}>{movie.original_title}</p>
             ))}
           </div>
           <div className='flex justify-center gap-2 p-2'>
