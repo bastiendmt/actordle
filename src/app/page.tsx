@@ -53,7 +53,11 @@ export default async function Home() {
           height={250}
           className='rounded-lg drop-shadow-lg'
         />
-        <Game list={actors} actor={randomActor} configuration={configuration} />
+        <Game
+          allActors={actors}
+          correctActor={randomActor}
+          configuration={configuration}
+        />
         <Movies
           allMovies={allMovies}
           correctMovies={correctMovies}
