@@ -90,7 +90,6 @@ export const Movies = ({
             Tries : {guesses.length + 1} / {LIMIT}
           </div>{' '}
           <div className='flex gap-4'>
-            <Button variant='subtle'>Get a hint</Button>
             <Button onClick={submitChoice}>Submit</Button>
           </div>
         </>
