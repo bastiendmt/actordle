@@ -1,7 +1,9 @@
 import { Configuration, Result } from '@/types/types';
 import { replaceAt } from '@/utils/utils';
+import type { FireworksHandlers } from '@fireworks-js/react';
+import { Fireworks } from '@fireworks-js/react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Separator } from './ui/separator';
@@ -27,10 +29,22 @@ export const Actor = ({
   const [success, setSuccess] = useState<boolean>(false);
   const [userChoice, setUserChoice] = useState<string>();
   const [end, setEnd] = useState<boolean>(false);
+  const [showFireworks, setShowFireworks] = useState(false);
 
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
   );
+
+  const ref = useRef<FireworksHandlers>(null);
+
+  const toggle = () => {
+    if (!ref.current) return;
+    if (ref.current.isRunning) {
+      ref.current.stop();
+    } else {
+      ref.current.start();
+    }
+  };
 
   useEffect(() => {
     if (userInput === '') {
@@ -63,6 +77,11 @@ export const Actor = ({
     setSuccess(success);
     setNameHint(correctActor.name);
     setActorFinished(true);
+
+    setShowFireworks(true);
+    setTimeout(() => {
+      setShowFireworks(false);
+    }, 2500);
   };
 
   // Debug to 2n round
@@ -156,6 +175,34 @@ export const Actor = ({
         </>
       )}
 
+      {showFireworks && (
+        <Fireworks
+          ref={ref}
+          options={{ opacity: 0.5 }}
+          style={{
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            position: 'fixed',
+          }}
+        />
+      )}
+
+      <>
+        {/* <div
+          style={{
+            display: 'flex',
+            gap: '4px',
+            position: 'absolute',
+            zIndex: 1,
+          }}
+        >
+          <button onClick={() => toggle()}>Toggle</button>
+          <button onClick={() => ref.current!.clear()}>Clear</button>
+        </div> */}
+      </>
+
       {process.env.NODE_ENV === 'development' && (
         <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
           <i>_debug section</i>
@@ -171,6 +218,9 @@ export const Actor = ({
             </Button>
             <Button className='bg-red-400' onClick={() => endGame(false)}>
               LOOSE
+            </Button>
+            <Button variant={'outline'} onClick={toggle}>
+              fireworks
             </Button>
           </div>
         </div>
