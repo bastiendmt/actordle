@@ -1,5 +1,4 @@
 import { Game } from '@/components/game';
-import { Movies } from '@/components/movies';
 import { ActorsData, Configuration, KnownFor } from '@/types/types';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
@@ -56,12 +55,8 @@ export default async function Home() {
         <Game
           allActors={actors}
           correctActor={randomActor}
-          configuration={configuration}
-        />
-        <Movies
           allMovies={allMovies}
           correctMovies={correctMovies}
-          correctActor={randomActor}
           configuration={configuration}
         />
       </main>

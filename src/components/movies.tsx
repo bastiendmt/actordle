@@ -52,6 +52,7 @@ export const Movies = ({
         setCorrectAnswer((prev) => prev + 1);
       } else {
         // handle incorrect pick
+        // render all movies when loosing
       }
     });
     // todo, reset userInput and userChoice ?
