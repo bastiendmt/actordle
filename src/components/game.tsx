@@ -13,16 +13,16 @@ import { H2, H3 } from './ui/titles';
 const LIMIT = 6;
 
 export const Game = ({
-  list,
-  actor,
+  allActors,
+  correctActor,
   configuration,
 }: {
-  list: Result[];
-  actor: Result;
+  allActors: Result[];
+  correctActor: Result;
   configuration: Configuration;
 }) => {
   const [userInput, setUserInput] = useState('');
-  const [filteredList, setFilteredList] = useState(list);
+  const [filteredList, setFilteredList] = useState(allActors);
 
   const [guesses, addGuess] = useState<string[]>([]);
   const [success, setSuccess] = useState<boolean>(false);
@@ -31,12 +31,12 @@ export const Game = ({
   const [movieHints, setMovieHints] = useState(0);
 
   const [nameHint, setNameHint] = useState(
-    actor.name.replace(/[a-zA-Z0-9]/gi, '_')
+    correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
   );
 
   useEffect(() => {
     if (userInput === '') {
-      setFilteredList(list);
+      setFilteredList(allActors);
       return;
     }
 
@@ -55,7 +55,7 @@ export const Game = ({
     console.log('picked: ', userChoice);
 
     addGuess((oldState) => [...oldState, userChoice]);
-    if (userChoice === actor.id.toString()) {
+    if (userChoice === correctActor.id.toString()) {
       endGame(true);
     }
   };
@@ -64,7 +64,7 @@ export const Game = ({
     setEnd(true);
     setSuccess(success);
     setMovieHints(3);
-    setNameHint(actor.name);
+    setNameHint(correctActor.name);
   };
 
   // Debug to 2n round
@@ -88,12 +88,16 @@ export const Game = ({
     }
     if (hint === 3) {
       const index = 0;
-      setNameHint((hidden) => replaceAt(hidden, index, actor.name[index]));
+      setNameHint((hidden) =>
+        replaceAt(hidden, index, correctActor.name[index])
+      );
     }
     if (hint === 4) {
-      const lastName = actor.name.split(' ')[1];
-      const index = actor.name.indexOf(lastName);
-      setNameHint((hidden) => replaceAt(hidden, index, actor.name[index]));
+      const lastName = correctActor.name.split(' ')[1];
+      const index = correctActor.name.indexOf(lastName);
+      setNameHint((hidden) =>
+        replaceAt(hidden, index, correctActor.name[index])
+      );
     }
   };
 
@@ -105,7 +109,7 @@ export const Game = ({
 
   const mostKnownFor = () => {
     // TODO to memorize
-    const playedIn = actor.known_for.map((knownFor) => {
+    const playedIn = correctActor.known_for.map((knownFor) => {
       // console.log('most known rendered');
       return (
         <div key={knownFor.id} className='my-1'>
@@ -180,9 +184,9 @@ export const Game = ({
       {process.env.NODE_ENV === 'development' && (
         <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
           <i>_debug section</i>
-          <strong>actor: {actor.name}</strong>
+          <strong>actor: {correctActor.name}</strong>
           <div>
-            {actor.known_for.map((movie) => (
+            {correctActor.known_for.map((movie) => (
               <p key={movie.id}>{movie.original_name}</p>
             ))}
           </div>
