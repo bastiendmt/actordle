@@ -3,8 +3,8 @@
 import { Configuration, KnownFor, Result } from '@/types/types';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Separator } from '@radix-ui/react-separator';
-import Image from 'next/image';
 import { useState } from 'react';
+import { playedIn } from './playedIn';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { H2 } from './ui/titles';
@@ -46,9 +46,12 @@ export const Movies = ({
     addGuess((oldState) => [...oldState, userChoice]);
     correctMovies.forEach((movie) => {
       if (movie.id.toString() === userChoice) {
+        // todo create handleCorrectPick
         console.log('correct movie');
         setMoviesToRender((prev) => [...prev, movie]);
         setCorrectAnswer((prev) => prev + 1);
+      } else {
+        // handle incorrect pick
       }
     });
     // todo, reset userInput and userChoice ?
@@ -96,20 +99,7 @@ export const Movies = ({
         You guessed <strong>{correctAnswer}</strong> / {correctMovies.length}
       </div>
 
-      {moviesToRender.map((movie) => {
-        return (
-          <div key={movie.id} className='my-1'>
-            <div>{movie.original_title || movie.name}</div>
-            <Image
-              width={180}
-              height={100}
-              src={`${configuration.images.base_url}/w185/${movie.backdrop_path}`}
-              alt={movie.original_title || 'famous movie'}
-              className='rounded-md drop-shadow-md'
-            />
-          </div>
-        );
-      })}
+      {playedIn(moviesToRender, configuration)}
     </>
   );
 };
