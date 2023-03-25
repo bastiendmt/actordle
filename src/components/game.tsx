@@ -67,9 +67,10 @@ export const Game = ({
     setNameHint(actor.name);
   };
 
-  useEffect(() => {
-    endGame(true);
-  }, []);
+  // Debug to 2n round
+  // useEffect(() => {
+  //   endGame(true);
+  // }, []);
 
   useEffect(() => {
     if (guesses.length >= LIMIT) {
@@ -180,6 +181,11 @@ export const Game = ({
         <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
           <i>_debug section</i>
           <strong>actor: {actor.name}</strong>
+          <div>
+            {actor.known_for.map((movie) => (
+              <p key={movie.id}>{movie.original_name}</p>
+            ))}
+          </div>
           <div className='flex justify-center gap-2 p-2'>
             <Button className='bg-emerald-400' onClick={() => endGame(true)}>
               WIN

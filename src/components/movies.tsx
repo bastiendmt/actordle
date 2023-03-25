@@ -1,8 +1,9 @@
 'use client';
 
-import { KnownFor } from '@/types/types';
+import { Configuration, KnownFor } from '@/types/types';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Separator } from '@radix-ui/react-separator';
+import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -10,11 +11,14 @@ import { Input } from './ui/input';
 export const Movies = ({
   allMovies,
   correctMovies,
+  configuration,
 }: {
   allMovies: KnownFor[];
   correctMovies: KnownFor[];
+  configuration: Configuration;
 }) => {
   const [userInput, setUserInput] = useState('');
+  const [moviesToRender, setMoviesToRender] = useState<KnownFor[]>([]);
 
   const filteredMovies = allMovies.filter(
     (movie) =>
@@ -36,6 +40,7 @@ export const Movies = ({
     correctMovies.forEach((movie) => {
       if (movie.id.toString() === userChoice) {
         console.log('correct movie');
+        setMoviesToRender((prev) => [...prev, movie]);
       }
     });
   };
@@ -54,10 +59,10 @@ export const Movies = ({
           {filteredMovies.map((movie) => (
             <div key={movie.id}>
               <div
-                // onClick={() => setUserChoice(actor.id.toString())}
+                onClick={() => setUserChoice(movie.id.toString())}
                 className={`
                     cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
-                    
+                    ${userChoice == movie.id.toString() ? 'bg-pink-200' : ''}
                     `}
               >
                 {movie.name || movie.original_title}
@@ -67,12 +72,28 @@ export const Movies = ({
           ))}
         </div>
       </ScrollArea>
+      <div>Tries : {guesses.length + 1} / 6</div>
       {!false && (
         <div className='flex gap-4'>
           <Button variant='subtle'>Get a hint</Button>
           <Button onClick={submitChoice}>Submit</Button>
         </div>
       )}
+
+      {moviesToRender.map((movie) => {
+        return (
+          <div key={movie.id} className='my-1'>
+            <div>{movie.original_title || movie.name}</div>
+            <Image
+              width={180}
+              height={100}
+              src={`${configuration.images.base_url}/w185/${movie.backdrop_path}`}
+              alt={movie.original_title || 'famous movie'}
+              className='rounded-md drop-shadow-md'
+            />
+          </div>
+        );
+      })}
     </>
   );
 };

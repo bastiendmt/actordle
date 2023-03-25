@@ -54,7 +54,11 @@ export default async function Home() {
           className='rounded-lg drop-shadow-lg'
         />
         <Game list={actors} actor={randomActor} configuration={configuration} />
-        <Movies allMovies={allMovies} correctMovies={correctMovies} />
+        <Movies
+          allMovies={allMovies}
+          correctMovies={correctMovies}
+          configuration={configuration}
+        />
       </main>
     </React.StrictMode>
   );
