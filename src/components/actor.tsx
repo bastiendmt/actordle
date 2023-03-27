@@ -9,7 +9,7 @@ import { Input } from './ui/input';
 import { Separator } from './ui/separator';
 import { H2, H3 } from './ui/titles';
 
-const LIMIT = 3;
+const MAX_GUESSES = 3;
 
 export const Actor = ({
   allActors,
@@ -29,13 +29,13 @@ export const Actor = ({
   const [success, setSuccess] = useState<boolean>(false);
   const [userChoice, setUserChoice] = useState<string>();
   const [end, setEnd] = useState<boolean>(false);
-  const [showFireworks, setShowFireworks] = useState(false);
 
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
   );
 
   const ref = useRef<FireworksHandlers>(null);
+  const [showFireworks, setShowFireworks] = useState(false);
 
   useEffect(() => {
     if (userInput === '') {
@@ -81,7 +81,7 @@ export const Actor = ({
   // }, []);
 
   useEffect(() => {
-    if (guesses.length >= LIMIT) {
+    if (guesses.length >= MAX_GUESSES) {
       setEnd(true);
     }
     showHint(guesses.length);
@@ -110,7 +110,7 @@ export const Actor = ({
   };
 
   const getHint = () => {
-    if (guesses.length > LIMIT) return;
+    if (guesses.length > MAX_GUESSES) return;
     addGuess((oldState) => [...oldState, '']);
     showHint(guesses.length);
   };
@@ -147,7 +147,7 @@ export const Actor = ({
         </>
       )}
       <div>
-        Tries : {guesses.length + 1} / {LIMIT}
+        Tries : {guesses.length + 1} / {MAX_GUESSES}
       </div>
       {!end && (
         <div className='flex gap-4'>

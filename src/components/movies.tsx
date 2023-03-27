@@ -10,7 +10,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { H2 } from './ui/titles';
 
-const LIMIT = 6;
+const MAX_GUESSES = 6;
 
 export const Movies = ({
   allMovies,
@@ -63,14 +63,13 @@ export const Movies = ({
     });
 
     console.log(correctAnswers);
-    // todo
 
     if (correctAnswers === correctMovies.length) {
       setShowFireworks(true);
       setTimeout(() => {
         setShowFireworks(false);
       }, 2500);
-    } else if (guesses.length >= LIMIT) {
+    } else if (guesses.length >= MAX_GUESSES) {
       setMoviesToRender(correctMovies);
     }
     // todo, reset userInput and userChoice ?
@@ -93,40 +92,43 @@ export const Movies = ({
   return (
     <>
       <H2>Round 2, guess {correctActor.gender === 1 ? 'her' : 'his'} movies</H2>
-      {guesses.length < LIMIT && correctAnswers < correctMovies.length && (
-        <>
-          <Input
-            placeholder='Filter movies'
-            onChange={(e) => setUserInput(e.target.value.toLowerCase())}
-            className='max-w-[18rem]'
-          />
-          <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-pink-400 dark:border-slate-700'>
-            <div className='px-2'>
-              <h4 className='my-4 text-sm font-medium leading-none'>Movies</h4>
-              {filteredMovies.map((movie) => (
-                <div key={movie.id}>
-                  <div
-                    onClick={() => setUserChoice(movie.id.toString())}
-                    className={`
+      {guesses.length < MAX_GUESSES &&
+        correctAnswers < correctMovies.length && (
+          <>
+            <Input
+              placeholder='Filter movies'
+              onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+              className='max-w-[18rem]'
+            />
+            <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-pink-400 dark:border-slate-700'>
+              <div className='px-2'>
+                <h4 className='my-4 text-sm font-medium leading-none'>
+                  Movies
+                </h4>
+                {filteredMovies.map((movie) => (
+                  <div key={movie.id}>
+                    <div
+                      onClick={() => setUserChoice(movie.id.toString())}
+                      className={`
                     cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
                     ${userChoice == movie.id.toString() ? 'bg-pink-200' : ''}
                     `}
-                  >
-                    {movie.name || movie.original_title}
+                    >
+                      {movie.name || movie.original_title}
+                    </div>
+                    <Separator className='my-4' />
                   </div>
-                  <Separator className='my-4' />
-                </div>
-              ))}
+                ))}
+              </div>
+            </ScrollArea>
+            <div>
+              Tries : {guesses.length + 1} / {MAX_GUESSES}
+            </div>{' '}
+            <div className='flex gap-4'>
+              <Button onClick={submitChoice}>Submit</Button>
             </div>
-          </ScrollArea>
-          <div>
-            Tries : {guesses.length + 1} / {LIMIT}
-          </div>{' '}
-          <div className='flex gap-4'>
-            <Button onClick={submitChoice}>Submit</Button>
-          </div>
-        </>
-      )}
+          </>
+        )}
       <div>
         You guessed <strong>{correctAnswers}</strong> / {correctMovies.length}
       </div>
