@@ -1,13 +1,15 @@
 import { Configuration, Result } from '@/types/types';
 import { replaceAt } from '@/utils/utils';
+import type { FireworksHandlers } from '@fireworks-js/react';
+import { Fireworks } from '@fireworks-js/react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Separator } from './ui/separator';
 import { H2, H3 } from './ui/titles';
 
-const LIMIT = 3;
+const MAX_GUESSES = 3;
 
 export const Actor = ({
   allActors,
@@ -31,6 +33,9 @@ export const Actor = ({
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
   );
+
+  const ref = useRef<FireworksHandlers>(null);
+  const [showFireworks, setShowFireworks] = useState(false);
 
   useEffect(() => {
     if (userInput === '') {
@@ -63,6 +68,11 @@ export const Actor = ({
     setSuccess(success);
     setNameHint(correctActor.name);
     setActorFinished(true);
+
+    setShowFireworks(success);
+    setTimeout(() => {
+      setShowFireworks(false);
+    }, 2500);
   };
 
   // Debug to 2n round
@@ -71,8 +81,9 @@ export const Actor = ({
   // }, []);
 
   useEffect(() => {
-    if (guesses.length >= LIMIT) {
+    if (guesses.length == MAX_GUESSES) {
       setEnd(true);
+      endGame(false);
     }
     showHint(guesses.length);
   }, [guesses]);
@@ -100,7 +111,7 @@ export const Actor = ({
   };
 
   const getHint = () => {
-    if (guesses.length > LIMIT) return;
+    if (guesses.length > MAX_GUESSES) return;
     addGuess((oldState) => [...oldState, '']);
     showHint(guesses.length);
   };
@@ -137,7 +148,7 @@ export const Actor = ({
         </>
       )}
       <div>
-        Tries : {guesses.length + 1} / {LIMIT}
+        Tries : {guesses.length + 1} / {MAX_GUESSES}
       </div>
       {!end && (
         <div className='flex gap-4'>
@@ -156,13 +167,27 @@ export const Actor = ({
         </>
       )}
 
+      {showFireworks && (
+        <Fireworks
+          ref={ref}
+          options={{ opacity: 0.5 }}
+          style={{
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            position: 'fixed',
+          }}
+        />
+      )}
+
       {process.env.NODE_ENV === 'development' && (
         <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
           <i>_debug section</i>
           <strong>actor: {correctActor.name}</strong>
           <div>
             {correctActor.known_for.map((movie) => (
-              <p key={movie.id}>{movie.original_title}</p>
+              <p key={movie.id}>{movie.original_title || movie.name}</p>
             ))}
           </div>
           <div className='flex justify-center gap-2 p-2'>

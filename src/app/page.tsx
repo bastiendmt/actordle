@@ -34,9 +34,9 @@ export default async function Home() {
 
   const allMovies: KnownFor[] = [];
   actors.forEach((actor) => {
-    console.log(actor.known_for.length);
     actor.known_for.forEach((movie) => allMovies.push(movie));
   });
+  // TODO sort movies alphabetical
   const correctMovies = randomActor.known_for;
 
   return (
