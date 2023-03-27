@@ -37,15 +37,6 @@ export const Actor = ({
 
   const ref = useRef<FireworksHandlers>(null);
 
-  const toggle = () => {
-    if (!ref.current) return;
-    if (ref.current.isRunning) {
-      ref.current.stop();
-    } else {
-      ref.current.start();
-    }
-  };
-
   useEffect(() => {
     if (userInput === '') {
       setFilteredList(allActors);
@@ -78,7 +69,7 @@ export const Actor = ({
     setNameHint(correctActor.name);
     setActorFinished(true);
 
-    setShowFireworks(true);
+    setShowFireworks(success);
     setTimeout(() => {
       setShowFireworks(false);
     }, 2500);
@@ -189,27 +180,13 @@ export const Actor = ({
         />
       )}
 
-      <>
-        {/* <div
-          style={{
-            display: 'flex',
-            gap: '4px',
-            position: 'absolute',
-            zIndex: 1,
-          }}
-        >
-          <button onClick={() => toggle()}>Toggle</button>
-          <button onClick={() => ref.current!.clear()}>Clear</button>
-        </div> */}
-      </>
-
       {process.env.NODE_ENV === 'development' && (
         <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
           <i>_debug section</i>
           <strong>actor: {correctActor.name}</strong>
           <div>
             {correctActor.known_for.map((movie) => (
-              <p key={movie.id}>{movie.original_title}</p>
+              <p key={movie.id}>{movie.original_title || movie.name}</p>
             ))}
           </div>
           <div className='flex justify-center gap-2 p-2'>
@@ -218,9 +195,6 @@ export const Actor = ({
             </Button>
             <Button className='bg-red-400' onClick={() => endGame(false)}>
               LOOSE
-            </Button>
-            <Button variant={'outline'} onClick={toggle}>
-              fireworks
             </Button>
           </div>
         </div>

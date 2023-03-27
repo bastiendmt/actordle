@@ -1,10 +1,11 @@
 'use client';
 
 import { Configuration, KnownFor, Result } from '@/types/types';
+import Fireworks, { FireworksHandlers } from '@fireworks-js/react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Separator } from '@radix-ui/react-separator';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { H2 } from './ui/titles';
@@ -24,7 +25,13 @@ export const Movies = ({
 }) => {
   const [userInput, setUserInput] = useState('');
   const [moviesToRender, setMoviesToRender] = useState<KnownFor[]>([]);
-  const [correctAnswer, setCorrectAnswer] = useState(0);
+  const [correctAnswers, addCorrectAnswers] = useState(0);
+
+  const [guesses, addGuess] = useState<string[]>([]);
+  const [userChoice, setUserChoice] = useState<string>();
+
+  const ref = useRef<FireworksHandlers>(null);
+  const [showFireworks, setShowFireworks] = useState(false);
 
   const filteredMovies = allMovies.filter(
     (movie) =>
@@ -32,8 +39,10 @@ export const Movies = ({
       movie.original_title?.toLowerCase().includes(userInput)
   );
 
-  const [guesses, addGuess] = useState<string[]>([]);
-  const [userChoice, setUserChoice] = useState<string>();
+  const handleCorrectPick = (movie: KnownFor) => {
+    setMoviesToRender((prev) => [...prev, movie]);
+    addCorrectAnswers((prev) => prev + 1);
+  };
 
   const submitChoice = () => {
     if (!userChoice) return;
@@ -46,21 +55,30 @@ export const Movies = ({
     addGuess((oldState) => [...oldState, userChoice]);
     correctMovies.forEach((movie) => {
       if (movie.id.toString() === userChoice) {
-        // todo create handleCorrectPick
-        console.log('correct movie');
-        setMoviesToRender((prev) => [...prev, movie]);
-        setCorrectAnswer((prev) => prev + 1);
+        handleCorrectPick(movie);
       } else {
         // handle incorrect pick
         // render all movies when loosing
       }
     });
+
+    console.log(correctAnswers);
+    // todo
+
+    if (correctAnswers === correctMovies.length) {
+      setShowFireworks(true);
+      setTimeout(() => {
+        setShowFireworks(false);
+      }, 2500);
+    } else if (guesses.length >= LIMIT) {
+      setMoviesToRender(correctMovies);
+    }
     // todo, reset userInput and userChoice ?
   };
 
   const playedIn = (movies: KnownFor[]) =>
     movies.map((movie) => (
-      <div key={movie.id} className='my-1'>
+      <div key={movie.id} className='my-1 flex flex-col'>
         <div>{movie.original_title}</div>
         <Image
           width={180}
@@ -75,7 +93,7 @@ export const Movies = ({
   return (
     <>
       <H2>Round 2, guess {correctActor.gender === 1 ? 'her' : 'his'} movies</H2>
-      {guesses.length < LIMIT && (
+      {guesses.length < LIMIT && correctAnswers < correctMovies.length && (
         <>
           <Input
             placeholder='Filter movies'
@@ -110,10 +128,31 @@ export const Movies = ({
         </>
       )}
       <div>
-        You guessed <strong>{correctAnswer}</strong> / {correctMovies.length}
+        You guessed <strong>{correctAnswers}</strong> / {correctMovies.length}
       </div>
 
       {playedIn(moviesToRender)}
+
+      {process.env.NODE_ENV === 'development' && (
+        <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
+          <i>_debug section</i>
+          <Button>add movie</Button>
+        </div>
+      )}
+
+      {showFireworks && (
+        <Fireworks
+          ref={ref}
+          options={{ opacity: 0.5 }}
+          style={{
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            position: 'fixed',
+          }}
+        />
+      )}
     </>
   );
 };
