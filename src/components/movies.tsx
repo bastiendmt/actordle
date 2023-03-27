@@ -5,7 +5,7 @@ import Fireworks, { FireworksHandlers } from '@fireworks-js/react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Separator } from '@radix-ui/react-separator';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { H2 } from './ui/titles';
@@ -50,7 +50,6 @@ export const Movies = ({
       console.log('already guessed');
       return;
     }
-    console.log('picked: ', userChoice);
 
     addGuess((oldState) => [...oldState, userChoice]);
     correctMovies.forEach((movie) => {
@@ -62,32 +61,37 @@ export const Movies = ({
       }
     });
 
-    console.log(correctAnswers);
-
-    if (correctAnswers === correctMovies.length) {
+    if (correctAnswers + 1 === correctMovies.length) {
       setShowFireworks(true);
       setTimeout(() => {
         setShowFireworks(false);
       }, 2500);
-    } else if (guesses.length >= MAX_GUESSES) {
-      setMoviesToRender(correctMovies);
     }
     // todo, reset userInput and userChoice ?
   };
 
-  const playedIn = (movies: KnownFor[]) =>
-    movies.map((movie) => (
-      <div key={movie.id} className='my-1 flex flex-col'>
-        <div>{movie.original_title}</div>
-        <Image
-          width={180}
-          height={100}
-          src={`${configuration.images.base_url}/w185/${movie.backdrop_path}`}
-          alt={movie.original_title || 'famous movie'}
-          className='rounded-md drop-shadow-md'
-        />
-      </div>
-    ));
+  useEffect(() => {
+    if (guesses.length == MAX_GUESSES) {
+      setMoviesToRender(correctMovies);
+    }
+  }, [guesses]);
+
+  const playedIn = (movies: KnownFor[]) => (
+    <div className='flex flex-col'>
+      {movies.map((movie) => (
+        <div key={movie.id} className='my-1'>
+          <div>{movie.original_title || movie.name}</div>
+          <Image
+            width={180}
+            height={100}
+            src={`${configuration.images.base_url}/w185/${movie.backdrop_path}`}
+            alt={movie.original_title || 'famous movie'}
+            className='rounded-md drop-shadow-md'
+          />
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <>
@@ -96,7 +100,7 @@ export const Movies = ({
         correctAnswers < correctMovies.length && (
           <>
             <Input
-              placeholder='Filter movies'
+              placeholder='Filter movies or tv shows'
               onChange={(e) => setUserInput(e.target.value.toLowerCase())}
               className='max-w-[18rem]'
             />
@@ -123,8 +127,19 @@ export const Movies = ({
             </ScrollArea>
             <div>
               Tries : {guesses.length + 1} / {MAX_GUESSES}
-            </div>{' '}
+            </div>
             <div className='flex gap-4'>
+              <Button
+                variant='subtle'
+                onClick={() => {
+                  setMoviesToRender((prev) => [
+                    ...prev,
+                    correctMovies[moviesToRender.length + 1],
+                  ]);
+                }}
+              >
+                Skip
+              </Button>
               <Button onClick={submitChoice}>Submit</Button>
             </div>
           </>
@@ -134,13 +149,6 @@ export const Movies = ({
       </div>
 
       {playedIn(moviesToRender)}
-
-      {process.env.NODE_ENV === 'development' && (
-        <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
-          <i>_debug section</i>
-          <Button>add movie</Button>
-        </div>
-      )}
 
       {showFireworks && (
         <Fireworks

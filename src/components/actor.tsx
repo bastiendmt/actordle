@@ -81,8 +81,9 @@ export const Actor = ({
   // }, []);
 
   useEffect(() => {
-    if (guesses.length >= MAX_GUESSES) {
+    if (guesses.length == MAX_GUESSES) {
       setEnd(true);
+      endGame(false);
     }
     showHint(guesses.length);
   }, [guesses]);
