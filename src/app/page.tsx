@@ -17,7 +17,8 @@ const getActors = async (page = 1): Promise<ActorsData> => {
 
 const getConfiguration = async (): Promise<Configuration> => {
   const data = await fetch(
-    `https://api.themoviedb.org/3/configuration?api_key=${TMDB_API_KEY}`
+    `https://api.themoviedb.org/3/configuration?api_key=${TMDB_API_KEY}`,
+    { next: { revalidate: 60 * 60 * 24 } }
   );
   return data.json();
 };
@@ -27,8 +28,7 @@ export default async function Home() {
   const configuration = await getConfiguration();
 
   // TODO filter only actors with known_for_department
-  // TODO pick one actor per day
-  const randomIndex = Math.floor(Math.random() * actors.length);
+  const randomIndex = new Date().getDay();
   const randomActor = actors[randomIndex];
   const imageURI = `${configuration.images.base_url}/w185/${randomActor.profile_path}`;
 
@@ -36,7 +36,19 @@ export default async function Home() {
   actors.forEach((actor) => {
     actor.known_for.forEach((movie) => allMovies.push(movie));
   });
-  // TODO sort movies alphabetical
+
+  actors.filter((actor) => {
+    if (actor.known_for_department === 'Acting') {
+      return actor;
+    }
+  });
+  actors.sort((a, b) => (a.name < b.name ? -1 : 0));
+
+  allMovies.sort((a, b) =>
+    (a.original_title || a.name || '') < (b.original_title || b.name || '')
+      ? -1
+      : 0
+  );
   const correctMovies = randomActor.known_for;
 
   return (

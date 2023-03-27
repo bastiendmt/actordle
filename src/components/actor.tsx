@@ -1,4 +1,4 @@
-import { Configuration, Result } from '@/types/types';
+import { Result } from '@/types/types';
 import { replaceAt } from '@/utils/utils';
 import type { FireworksHandlers } from '@fireworks-js/react';
 import { Fireworks } from '@fireworks-js/react';
@@ -14,12 +14,10 @@ const MAX_GUESSES = 3;
 export const Actor = ({
   allActors,
   correctActor,
-  configuration,
   setActorFinished,
 }: {
   allActors: Result[];
   correctActor: Result;
-  configuration: Configuration;
   setActorFinished: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [userInput, setUserInput] = useState('');
@@ -102,12 +100,6 @@ export const Actor = ({
         replaceAt(hidden, index, correctActor.name[index])
       );
     }
-    //  if (hint === 1) {
-    //    setMovieHints(1);
-    //  }
-    //  if (hint === 2) {
-    //    setMovieHints(2);
-    //  }
   };
 
   const getHint = () => {

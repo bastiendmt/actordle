@@ -26,7 +26,6 @@ export const Game = ({
       <Actor
         allActors={allActors}
         correctActor={correctActor}
-        configuration={configuration}
         setActorFinished={setActorFinished}
       />
       {actorFinished && (
