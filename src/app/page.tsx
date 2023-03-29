@@ -10,7 +10,7 @@ const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 const getActors = async (page = 1): Promise<ActorsData> => {
   const data = await fetch(
-    `https://api.themoviedb.org/3/person/popular?api_key=${TMDB_API_KEY}&language=en-US&page=${page}`
+    `https://api.themoviedb.org/3/trending/person/week?api_key=${TMDB_API_KEY}`
   );
   return data.json();
 };
@@ -27,22 +27,25 @@ export default async function Home() {
   const { results: actors } = await getActors();
   const configuration = await getConfiguration();
 
-  // TODO filter only actors with known_for_department
   const randomIndex = new Date().getDay();
   const randomActor = actors[randomIndex];
   const imageURI = `${configuration.images.base_url}/w185/${randomActor.profile_path}`;
 
   const allMovies: KnownFor[] = [];
   actors.forEach((actor) => {
-    actor.known_for.forEach((movie) => allMovies.push(movie));
+    actor.known_for.forEach((movie) => {
+      // prevent from adding the same movie to the list
+      if (!allMovies.some((m) => m.id === movie.id)) {
+        allMovies.push(movie);
+      }
+    });
   });
 
-  actors.filter((actor) => {
-    if (actor.known_for_department === 'Acting') {
-      return actor;
-    }
+  const filteredActors = actors.filter((actor) => {
+    if (actor.known_for_department !== 'Acting') return;
+    return actor;
   });
-  actors.sort((a, b) => (a.name < b.name ? -1 : 0));
+  filteredActors.sort((a, b) => (a.name < b.name ? -1 : 0));
 
   allMovies.sort((a, b) =>
     (a.original_title || a.name || '') < (b.original_title || b.name || '')
@@ -65,7 +68,7 @@ export default async function Home() {
           className='rounded-lg drop-shadow-lg'
         />
         <Game
-          allActors={actors}
+          allActors={filteredActors}
           correctActor={randomActor}
           allMovies={allMovies}
           correctMovies={correctMovies}
