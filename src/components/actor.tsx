@@ -11,7 +11,7 @@ import { H2, H3 } from './ui/titles';
 
 const MAX_GUESSES = 3;
 
-export const Actor = ({
+export const ActorGuess = ({
   allActors,
   correctActor,
   setActorFinished,

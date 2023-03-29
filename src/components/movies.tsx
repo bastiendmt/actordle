@@ -1,4 +1,4 @@
-import { Configuration, KnownFor, Result } from '@/types/types';
+import { Actor, Configuration, KnownFor, Result } from '@/types/types';
 import Fireworks, { FireworksHandlers } from '@fireworks-js/react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Separator } from '@radix-ui/react-separator';
@@ -15,11 +15,13 @@ export const Movies = ({
   correctMovies,
   correctActor,
   configuration,
+  actorDetails,
 }: {
   allMovies: KnownFor[];
   correctMovies: KnownFor[];
   correctActor: Result;
   configuration: Configuration;
+  actorDetails: Actor;
 }) => {
   const [userInput, setUserInput] = useState('');
   const [moviesToRender, setMoviesToRender] = useState<KnownFor[]>([]);
@@ -30,6 +32,8 @@ export const Movies = ({
 
   const ref = useRef<FireworksHandlers>(null);
   const [showFireworks, setShowFireworks] = useState(false);
+
+  const [showProfileLink, setShowProfileLink] = useState(false);
 
   const filteredMovies = allMovies.filter(
     (movie) =>
@@ -60,6 +64,7 @@ export const Movies = ({
     });
 
     if (correctAnswers + 1 === correctMovies.length) {
+      setShowProfileLink(true);
       setShowFireworks(true);
       setTimeout(() => {
         setShowFireworks(false);
@@ -71,6 +76,7 @@ export const Movies = ({
   useEffect(() => {
     if (guesses.length == MAX_GUESSES) {
       setMoviesToRender(correctMovies);
+      setShowProfileLink(true);
     }
   }, [guesses]);
 
@@ -78,7 +84,7 @@ export const Movies = ({
     <div className='flex flex-col'>
       {movies.map((movie) => (
         <div key={movie.id} className='my-1'>
-          <div>{movie.title || movie.name}</div>
+          <div>{movie?.title || movie?.name}</div>
           <Image
             width={180}
             height={100}
@@ -130,6 +136,7 @@ export const Movies = ({
               <Button
                 variant='subtle'
                 onClick={() => {
+                  addGuess((oldState) => [...oldState, '']);
                   setMoviesToRender((prev) => [
                     ...prev,
                     correctMovies[moviesToRender.length + 1],
@@ -146,7 +153,17 @@ export const Movies = ({
         You guessed <strong>{correctAnswers}</strong> / {correctMovies.length}
       </div>
 
-      {playedIn(moviesToRender)}
+      {/* {playedIn(moviesToRender)} */}
+
+      {showProfileLink && (
+        <a
+          className='underline'
+          href={`https://www.imdb.com/name/${actorDetails.imdb_id}/`}
+          target='_blank'
+        >
+          Find more on imdb
+        </a>
+      )}
 
       {showFireworks && (
         <Fireworks

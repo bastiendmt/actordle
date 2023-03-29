@@ -1,5 +1,5 @@
 import { Game } from '@/components/game';
-import { ActorsData, Configuration, KnownFor } from '@/types/types';
+import { Actor, ActorsData, Configuration, KnownFor } from '@/types/types';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import React from 'react';
@@ -13,6 +13,16 @@ const getActors = async (page = 1): Promise<ActorsData> => {
     `https://api.themoviedb.org/3/trending/person/week?api_key=${TMDB_API_KEY}`
   );
   return data.json();
+};
+
+const getActorDetails = async (actorId: number): Promise<Actor> => {
+  const data = await fetch(
+    `https://api.themoviedb.org/3/person/${actorId}?api_key=${TMDB_API_KEY}&language=en-US`
+  );
+  if (data.ok) {
+    return data.json();
+  }
+  throw new Error('could not get details');
 };
 
 const getConfiguration = async (): Promise<Configuration> => {
@@ -30,6 +40,8 @@ export default async function Home() {
   const randomIndex = new Date().getDay();
   const randomActor = actors[randomIndex];
   const imageURI = `${configuration.images.base_url}/w185/${randomActor.profile_path}`;
+
+  const actorDetails = await getActorDetails(randomActor.id);
 
   const allMovies: KnownFor[] = [];
   actors.forEach((actor) => {
@@ -69,6 +81,7 @@ export default async function Home() {
         />
         <Game
           allActors={filteredActors}
+          actorDetails={actorDetails}
           correctActor={randomActor}
           allMovies={allMovies}
           correctMovies={correctMovies}

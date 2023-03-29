@@ -1,8 +1,8 @@
 'use client';
 
-import { Configuration, KnownFor, Result } from '@/types/types';
+import { Actor, Configuration, KnownFor, Result } from '@/types/types';
 import { useState } from 'react';
-import { Actor } from './actor';
+import { ActorGuess } from './actor';
 import { Movies } from './movies';
 
 /** Manage game rounds */
@@ -12,18 +12,20 @@ export const Game = ({
   configuration,
   allMovies,
   correctMovies,
+  actorDetails,
 }: {
   allActors: Result[];
   correctActor: Result;
   configuration: Configuration;
   allMovies: KnownFor[];
   correctMovies: KnownFor[];
+  actorDetails: Actor;
 }) => {
   const [actorFinished, setActorFinished] = useState(false);
 
   return (
     <>
-      <Actor
+      <ActorGuess
         allActors={allActors}
         correctActor={correctActor}
         setActorFinished={setActorFinished}
@@ -33,6 +35,7 @@ export const Game = ({
           allMovies={allMovies}
           correctMovies={correctMovies}
           correctActor={correctActor}
+          actorDetails={actorDetails}
           configuration={configuration}
         />
       )}
