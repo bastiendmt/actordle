@@ -133,18 +133,18 @@ export const Movies = ({
               Tries : {guesses.length + 1} / {MAX_GUESSES}
             </div>
             <div className='flex gap-4'>
-              <Button
+              {/* <Button
                 variant='subtle'
                 onClick={() => {
                   addGuess((oldState) => [...oldState, '']);
                   setMoviesToRender((prev) => [
                     ...prev,
-                    correctMovies[moviesToRender.length + 1],
+                    correctMovies[moviesToRender.length],
                   ]);
                 }}
               >
                 Skip
-              </Button>
+              </Button> */}
               <Button onClick={submitChoice}>Submit</Button>
             </div>
           </>
@@ -153,7 +153,7 @@ export const Movies = ({
         You guessed <strong>{correctAnswers}</strong> / {correctMovies.length}
       </div>
 
-      {/* {playedIn(moviesToRender)} */}
+      {playedIn(moviesToRender)}
 
       {showProfileLink && (
         <a
