@@ -26,14 +26,13 @@ export const Movies = ({
   const [userInput, setUserInput] = useState('');
   const [moviesToRender, setMoviesToRender] = useState<KnownFor[]>([]);
   const [correctAnswers, addCorrectAnswers] = useState(0);
+  const [end, setEnd] = useState(false);
 
   const [guesses, addGuess] = useState<string[]>([]);
   const [userChoice, setUserChoice] = useState<string>();
 
   const ref = useRef<FireworksHandlers>(null);
   const [showFireworks, setShowFireworks] = useState(false);
-
-  const [showProfileLink, setShowProfileLink] = useState(false);
 
   const filteredMovies = allMovies.filter(
     (movie) =>
@@ -44,6 +43,18 @@ export const Movies = ({
   const handleCorrectPick = (movie: KnownFor) => {
     setMoviesToRender((prev) => [...prev, movie]);
     addCorrectAnswers((prev) => prev + 1);
+  };
+
+  const handleSkip = () => {
+    addGuess((oldState) => [...oldState, '']);
+
+    // filter movies already rendered
+    const moviesToAdd = correctMovies.filter(
+      (correctMovie) =>
+        !moviesToRender.some((movie) => movie.id === correctMovie.id)
+    );
+
+    setMoviesToRender((prev) => [...prev, moviesToAdd[0]]);
   };
 
   const submitChoice = () => {
@@ -64,7 +75,6 @@ export const Movies = ({
     });
 
     if (correctAnswers + 1 === correctMovies.length) {
-      setShowProfileLink(true);
       setShowFireworks(true);
       setTimeout(() => {
         setShowFireworks(false);
@@ -73,12 +83,18 @@ export const Movies = ({
     // todo, reset userInput and userChoice ?
   };
 
+  /**
+   * Handle game ending
+   */
   useEffect(() => {
-    if (guesses.length == MAX_GUESSES) {
+    if (
+      guesses.length == MAX_GUESSES ||
+      moviesToRender.length === correctMovies.length
+    ) {
       setMoviesToRender(correctMovies);
-      setShowProfileLink(true);
+      setEnd(true);
     }
-  }, [guesses]);
+  }, [guesses, moviesToRender]);
 
   const playedIn = (movies: KnownFor[]) => (
     <div className='flex flex-col'>
@@ -100,62 +116,50 @@ export const Movies = ({
   return (
     <>
       <H2>Round 2, guess {correctActor.gender === 1 ? 'her' : 'his'} movies</H2>
-      {guesses.length < MAX_GUESSES &&
-        correctAnswers < correctMovies.length && (
-          <>
-            <Input
-              placeholder='Filter movies or tv shows'
-              onChange={(e) => setUserInput(e.target.value.toLowerCase())}
-              className='max-w-[18rem]'
-            />
-            <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-pink-400 dark:border-slate-700'>
-              <div className='px-2'>
-                <h4 className='my-4 text-sm font-medium leading-none'>
-                  Movies
-                </h4>
-                {filteredMovies.map((movie) => (
-                  <div key={movie.id}>
-                    <div
-                      onClick={() => setUserChoice(movie.id.toString())}
-                      className={`
+      {!end && (
+        <>
+          <Input
+            placeholder='Filter movies or tv shows'
+            onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+            className='max-w-[18rem]'
+          />
+          <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-pink-400 dark:border-slate-700'>
+            <div className='px-2'>
+              <h4 className='my-4 text-sm font-medium leading-none'>Movies</h4>
+              {filteredMovies.map((movie) => (
+                <div key={movie.id}>
+                  <div
+                    onClick={() => setUserChoice(movie.id.toString())}
+                    className={`
                     cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
                     ${userChoice == movie.id.toString() ? 'bg-pink-200' : ''}
                     `}
-                    >
-                      {movie.title || movie.name}
-                    </div>
-                    <Separator className='my-4' />
+                  >
+                    {movie.title || movie.name}
                   </div>
-                ))}
-              </div>
-            </ScrollArea>
-            <div>
-              Tries : {guesses.length + 1} / {MAX_GUESSES}
+                  <Separator className='my-4' />
+                </div>
+              ))}
             </div>
-            <div className='flex gap-4'>
-              {/* <Button
-                variant='subtle'
-                onClick={() => {
-                  addGuess((oldState) => [...oldState, '']);
-                  setMoviesToRender((prev) => [
-                    ...prev,
-                    correctMovies[moviesToRender.length],
-                  ]);
-                }}
-              >
-                Skip
-              </Button> */}
-              <Button onClick={submitChoice}>Submit</Button>
-            </div>
-          </>
-        )}
+          </ScrollArea>
+          <div>
+            Tries : {guesses.length + 1} / {MAX_GUESSES}
+          </div>
+          <div className='flex gap-4'>
+            <Button variant='subtle' onClick={handleSkip}>
+              Skip
+            </Button>
+            <Button onClick={submitChoice}>Submit</Button>
+          </div>
+        </>
+      )}
       <div>
         You guessed <strong>{correctAnswers}</strong> / {correctMovies.length}
       </div>
 
       {playedIn(moviesToRender)}
 
-      {showProfileLink && (
+      {end && (
         <a
           className='underline'
           href={`https://www.imdb.com/name/${actorDetails.imdb_id}/`}
