@@ -1,6 +1,7 @@
 {
   "name": "Actordle",
   "short_name": "Actordle",
+  "start_url": "/",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
