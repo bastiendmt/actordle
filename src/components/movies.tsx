@@ -42,7 +42,15 @@ export const Movies = ({
 
   const handleCorrectPick = (movie: KnownFor) => {
     setMoviesToRender((prev) => [...prev, movie]);
-    addCorrectAnswers((prev) => prev + 1);
+
+    const value = correctAnswers + 1;
+    addCorrectAnswers(value);
+    if (value === correctMovies.length) {
+      setShowFireworks(true);
+      setTimeout(() => {
+        setShowFireworks(false);
+      }, 2500);
+    }
   };
 
   const handleSkip = () => {
@@ -74,12 +82,6 @@ export const Movies = ({
       }
     });
 
-    if (correctAnswers + 1 === correctMovies.length) {
-      setShowFireworks(true);
-      setTimeout(() => {
-        setShowFireworks(false);
-      }, 2500);
-    }
     // todo, reset userInput and userChoice ?
   };
 
