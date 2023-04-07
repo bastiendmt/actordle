@@ -3,6 +3,7 @@ import { replaceAt } from '@/utils/utils';
 import type { FireworksHandlers } from '@fireworks-js/react';
 import { Fireworks } from '@fireworks-js/react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
+import confetti from 'canvas-confetti';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -31,6 +32,14 @@ export const ActorGuess = ({
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
   );
+
+  const confettiCanvas = document.getElementById(
+    'confetti'
+  ) as HTMLCanvasElement;
+  const myConfetti = confetti.create(confettiCanvas, {
+    resize: true,
+    useWorker: true,
+  });
 
   const ref = useRef<FireworksHandlers>(null);
   const [showFireworks, setShowFireworks] = useState(false);
@@ -68,9 +77,11 @@ export const ActorGuess = ({
     setActorFinished(true);
 
     setShowFireworks(success);
-    setTimeout(() => {
-      setShowFireworks(false);
-    }, 2500);
+
+    myConfetti({
+      particleCount: 150,
+      spread: 160,
+    });
   };
 
   // Debug to 2n round
@@ -159,7 +170,7 @@ export const ActorGuess = ({
         </>
       )}
 
-      {showFireworks && (
+      {/* {showFireworks && (
         <Fireworks
           ref={ref}
           options={{ opacity: 0.5 }}
@@ -171,7 +182,7 @@ export const ActorGuess = ({
             position: 'fixed',
           }}
         />
-      )}
+      )} */}
 
       {process.env.NODE_ENV === 'development' && (
         <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
