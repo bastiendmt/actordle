@@ -1,7 +1,5 @@
 import { Result } from '@/types/types';
 import { replaceAt } from '@/utils/utils';
-import type { FireworksHandlers } from '@fireworks-js/react';
-import { Fireworks } from '@fireworks-js/react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import confetti from 'canvas-confetti';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
@@ -41,9 +39,6 @@ export const ActorGuess = ({
     useWorker: true,
   });
 
-  const ref = useRef<FireworksHandlers>(null);
-  const [showFireworks, setShowFireworks] = useState(false);
-
   useEffect(() => {
     if (userInput === '') {
       setFilteredList(allActors);
@@ -75,8 +70,6 @@ export const ActorGuess = ({
     setSuccess(success);
     setNameHint(correctActor.name);
     setActorFinished(true);
-
-    setShowFireworks(success);
 
     myConfetti({
       particleCount: 150,
@@ -169,20 +162,6 @@ export const ActorGuess = ({
           <div>Maybe you will have more luck tomorrow</div>
         </>
       )}
-
-      {/* {showFireworks && (
-        <Fireworks
-          ref={ref}
-          options={{ opacity: 0.5 }}
-          style={{
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            position: 'fixed',
-          }}
-        />
-      )} */}
 
       {process.env.NODE_ENV === 'development' && (
         <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
