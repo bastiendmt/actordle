@@ -1,4 +1,5 @@
 import { Result } from '@/types/types';
+import { useConfetti } from '@/utils/useConfetti';
 import { replaceAt } from '@/utils/utils';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import confetti from 'canvas-confetti';
@@ -30,14 +31,7 @@ export const ActorGuess = ({
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
   );
-
-  const confettiCanvas = document.getElementById(
-    'confetti'
-  ) as HTMLCanvasElement;
-  const myConfetti = confetti.create(confettiCanvas, {
-    resize: true,
-    useWorker: true,
-  });
+  const throwConfetti = useConfetti();
 
   useEffect(() => {
     if (userInput === '') {
@@ -71,10 +65,7 @@ export const ActorGuess = ({
     setNameHint(correctActor.name);
     setActorFinished(true);
 
-    myConfetti({
-      particleCount: 150,
-      spread: 160,
-    });
+    throwConfetti();
   };
 
   // Debug to 2n round
