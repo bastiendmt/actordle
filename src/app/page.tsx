@@ -72,6 +72,10 @@ export default async function Home() {
         <h1 className='scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl'>
           🎬 Actordle
         </h1>
+        <canvas
+          id='confetti'
+          className='pointer-events-none fixed z-50 h-full w-full'
+        ></canvas>
         <Image
           src={imageURI}
           alt='Actor to guess'

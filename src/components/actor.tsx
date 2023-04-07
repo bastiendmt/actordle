@@ -1,9 +1,8 @@
 import { Result } from '@/types/types';
+import { useConfetti } from '@/utils/useConfetti';
 import { replaceAt } from '@/utils/utils';
-import type { FireworksHandlers } from '@fireworks-js/react';
-import { Fireworks } from '@fireworks-js/react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Separator } from './ui/separator';
@@ -31,9 +30,7 @@ export const ActorGuess = ({
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
   );
-
-  const ref = useRef<FireworksHandlers>(null);
-  const [showFireworks, setShowFireworks] = useState(false);
+  const throwConfetti = useConfetti();
 
   useEffect(() => {
     if (userInput === '') {
@@ -67,10 +64,7 @@ export const ActorGuess = ({
     setNameHint(correctActor.name);
     setActorFinished(true);
 
-    setShowFireworks(success);
-    setTimeout(() => {
-      setShowFireworks(false);
-    }, 2500);
+    throwConfetti();
   };
 
   // Debug to 2n round
@@ -157,20 +151,6 @@ export const ActorGuess = ({
           <H3 classes='text-red-600'>You lost :(</H3>
           <div>Maybe you will have more luck tomorrow</div>
         </>
-      )}
-
-      {showFireworks && (
-        <Fireworks
-          ref={ref}
-          options={{ opacity: 0.5 }}
-          style={{
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            position: 'fixed',
-          }}
-        />
       )}
 
       {process.env.NODE_ENV === 'development' && (
