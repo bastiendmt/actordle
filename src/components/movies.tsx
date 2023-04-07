@@ -1,9 +1,9 @@
 import { Actor, Configuration, KnownFor, Result } from '@/types/types';
-import Fireworks, { FireworksHandlers } from '@fireworks-js/react';
+import { useConfetti } from '@/utils/useConfetti';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Separator } from '@radix-ui/react-separator';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { H2 } from './ui/titles';
@@ -31,8 +31,7 @@ export const Movies = ({
   const [guesses, addGuess] = useState<string[]>([]);
   const [userChoice, setUserChoice] = useState<string>();
 
-  const ref = useRef<FireworksHandlers>(null);
-  const [showFireworks, setShowFireworks] = useState(false);
+  const throwConfetti = useConfetti();
 
   const filteredMovies = allMovies.filter(
     (movie) =>
@@ -46,10 +45,7 @@ export const Movies = ({
     const value = correctAnswers + 1;
     addCorrectAnswers(value);
     if (value === correctMovies.length) {
-      setShowFireworks(true);
-      setTimeout(() => {
-        setShowFireworks(false);
-      }, 2500);
+      throwConfetti();
     }
   };
 
@@ -169,20 +165,6 @@ export const Movies = ({
         >
           Find more on imdb
         </a>
-      )}
-
-      {showFireworks && (
-        <Fireworks
-          ref={ref}
-          options={{ opacity: 0.5 }}
-          style={{
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            position: 'fixed',
-          }}
-        />
       )}
     </>
   );
