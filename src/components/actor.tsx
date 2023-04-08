@@ -45,12 +45,10 @@ export const ActorGuess = ({
   }, [userInput]);
 
   const submitChoice = () => {
-    if (!userChoice) return;
-    if (guesses.includes(userChoice)) {
-      console.log('already guessed');
+    if (!userChoice) {
+      addGuess((oldState) => [...oldState, '']);
       return;
     }
-    console.log('picked: ', userChoice);
 
     addGuess((oldState) => [...oldState, userChoice]);
     if (userChoice === correctActor.id.toString()) {
@@ -96,22 +94,21 @@ export const ActorGuess = ({
     }
   };
 
-  const getHint = () => {
-    if (guesses.length > MAX_GUESSES) return;
-    addGuess((oldState) => [...oldState, '']);
-    showHint(guesses.length);
-  };
-
   return (
     <>
       <H2>{nameHint}</H2>
       {!end && (
         <>
-          <Input
-            placeholder='Filter actors'
-            onChange={(e) => setUserInput(e.target.value.toLowerCase())}
-            className='max-w-[18rem]'
-          />
+          <div className='flex w-72'>
+            <Input
+              placeholder='Filter actors'
+              onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+              className='max-w-[18rem] rounded-r-none'
+            />
+            <Button onClick={submitChoice} className='rounded-l-none'>
+              Submit
+            </Button>
+          </div>
           <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
             <div className='px-2'>
               <h4 className='my-4 text-sm font-medium leading-none'>Actors</h4>
@@ -136,14 +133,6 @@ export const ActorGuess = ({
       <div>
         Tries : {guesses.length + 1} / {MAX_GUESSES}
       </div>
-      {!end && (
-        <div className='flex gap-4'>
-          <Button variant='subtle' onClick={getHint}>
-            Get a hint
-          </Button>
-          <Button onClick={submitChoice}>Submit</Button>
-        </div>
-      )}
 
       {success && <H3 classes='text-green-600'>You won !</H3>}
       {end && !success && (
