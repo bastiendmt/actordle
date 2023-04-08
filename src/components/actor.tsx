@@ -62,7 +62,7 @@ export const ActorGuess = ({
     setNameHint(correctActor.name);
     setActorFinished(true);
 
-    throwConfetti();
+    success && throwConfetti();
   };
 
   // Debug to 2n round
