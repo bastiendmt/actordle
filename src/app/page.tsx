@@ -36,9 +36,12 @@ const getConfiguration = async (): Promise<Configuration> => {
 export default async function Home() {
   const { results: actors } = await getActors();
   const configuration = await getConfiguration();
+  const filteredActors = actors.filter(
+    (actor) => actor.known_for_department === 'Acting'
+  );
 
   const randomIndex = new Date().getDay();
-  const randomActor = actors[randomIndex];
+  const randomActor = filteredActors[randomIndex];
   const imageURI = `${configuration.images.base_url}/w185/${randomActor.profile_path}`;
 
   const actorDetails = await getActorDetails(randomActor.id);
@@ -53,10 +56,6 @@ export default async function Home() {
     });
   });
 
-  const filteredActors = actors.filter((actor) => {
-    if (actor.known_for_department !== 'Acting') return;
-    return actor;
-  });
   filteredActors.sort((a, b) => (a.name < b.name ? -1 : 0));
 
   allMovies.sort((a, b) =>
