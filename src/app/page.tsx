@@ -36,10 +36,9 @@ const getConfiguration = async (): Promise<Configuration> => {
 export default async function Home() {
   const { results: actors } = await getActors();
   const configuration = await getConfiguration();
-  const filteredActors = actors.filter((actor) => {
-    if (actor.known_for_department !== 'Acting') return;
-    return actor;
-  });
+  const filteredActors = actors.filter(
+    (actor) => actor.known_for_department === 'Acting'
+  );
 
   const randomIndex = new Date().getDay();
   const randomActor = filteredActors[randomIndex];
