@@ -24,7 +24,14 @@ export const Movies = ({
   actorDetails: Actor;
 }) => {
   const [userInput, setUserInput] = useState('');
-  const [moviesToRender, setMoviesToRender] = useState<KnownFor[]>([]);
+  const [moviesToRender, setMoviesToRender] = useState<
+    { blurred: boolean; movie: KnownFor }[]
+  >(
+    correctMovies.map((movie) => ({
+      blurred: true,
+      movie: movie,
+    }))
+  );
   const [correctAnswers, addCorrectAnswers] = useState(0);
   const [end, setEnd] = useState(false);
 
@@ -43,7 +50,24 @@ export const Movies = ({
   );
 
   const handleCorrectPick = (movie: KnownFor) => {
-    setMoviesToRender((prev) => [...prev, movie]);
+    // filter array to find movie index
+    const match = moviesToRender.find(
+      (correct) => correct.movie.id === movie.id
+    );
+    match!.blurred = false;
+
+    setMoviesToRender((prev) => {
+      return prev.map((correct) => {
+        if (correct.movie.id === movie.id) {
+          return { ...correct, blurred: false };
+        } else {
+          return { ...correct };
+        }
+      });
+    });
+    console.log(match);
+    // mutate property to unblur
+    // setMoviesToRender((prev) => [...prev, { movie, blurred: false }]);
 
     const value = correctAnswers + 1;
     addCorrectAnswers(value);
@@ -58,10 +82,13 @@ export const Movies = ({
     // filter movies already rendered
     const moviesToAdd = correctMovies.filter(
       (correctMovie) =>
-        !moviesToRender.some((movie) => movie.id === correctMovie.id)
+        !moviesToRender.some(({ movie }) => movie.id === correctMovie.id)
     );
 
-    setMoviesToRender((prev) => [...prev, moviesToAdd[0]]);
+    setMoviesToRender((prev) => [
+      ...prev,
+      { movie: moviesToAdd[0], blurred: false },
+    ]);
   };
 
   const submitChoice = () => {
@@ -76,20 +103,17 @@ export const Movies = ({
     }
 
     addGuess((oldState) => [...oldState, userChoice]);
+
+    let allIncorrect = true;
     correctMovies.forEach((movie) => {
       if (movie.id.toString() === userChoice) {
+        allIncorrect = false;
         handleCorrectPick(movie);
         return;
-      } else {
-        // handle incorrect pick
-        // render all movies when loosing
       }
     });
-    // setShowIncorrect(true);
-
-    // todo, reset userInput and userChoice ?
+    allIncorrect && setShowIncorrect(true);
   };
-
   /** remove show incorrect after 2s */
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -109,23 +133,32 @@ export const Movies = ({
       guesses.length == MAX_GUESSES ||
       moviesToRender.length === correctMovies.length
     ) {
-      setMoviesToRender(correctMovies);
-      setEnd(true);
+      // const m: { blurred: boolean; movie: KnownFor }[] = correctMovies.map(
+      //   (movie) => ({
+      //     blurred: false,
+      //     movie: movie,
+      //   })
+      // );
+      // setMoviesToRender(m);
+      // setEnd(true);
     }
-  }, [guesses, moviesToRender]);
+  }, [guesses]);
 
-  const playedIn = (movies: KnownFor[]) => (
+  const playedIn = (movies: { blurred: boolean; movie: KnownFor }[]) => (
     <div className='flex flex-col'>
-      {movies.map((movie) => (
-        <div key={movie.id} className='my-1'>
-          <div>{movie?.title || movie?.name}</div>
+      {movies.map((item) => (
+        <div key={item.movie.id} className='my-1'>
+          <div>
+            {item.blurred ? '-----' : item?.movie.title || item?.movie.name}
+          </div>
           <Image
             width={180}
             height={100}
-            src={`${configuration.images.base_url}/w185/${movie.backdrop_path}`}
-            alt={movie.title || movie.name || 'famous movie'}
-            // add blur-sm
-            className='rounded-md drop-shadow-md'
+            src={`${configuration.images.base_url}/w185/${item.movie.backdrop_path}`}
+            alt={item.movie.title || item.movie.name || 'famous movie'}
+            className={`rounded-md drop-shadow-md ${
+              item.blurred ? 'blur-sm' : ''
+            }`}
           />
         </div>
       ))}
@@ -190,11 +223,11 @@ export const Movies = ({
             wrong guess
           </div>
 
-          <div className='flex gap-4'>
+          {/* <div className='flex gap-4'>
             <Button variant='subtle' onClick={handleSkip}>
               Skip
             </Button>
-          </div>
+          </div> */}
         </>
       )}
       <div>
