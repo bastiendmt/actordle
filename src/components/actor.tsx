@@ -26,6 +26,7 @@ export const ActorGuess = ({
   const [success, setSuccess] = useState<boolean>(false);
   const [userChoice, setUserChoice] = useState<string>();
   const [end, setEnd] = useState<boolean>(false);
+  const [showIncorrect, setShowIncorrect] = useState(false);
 
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
@@ -53,8 +54,21 @@ export const ActorGuess = ({
     addGuess((oldState) => [...oldState, userChoice]);
     if (userChoice === correctActor.id.toString()) {
       endGame(true);
+    } else {
+      setShowIncorrect(true);
     }
   };
+
+  /** remove show incorrect after 2s */
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (showIncorrect) {
+      timer = setTimeout(() => {
+        setShowIncorrect(false);
+      }, 2000);
+    }
+    return () => timer && clearTimeout(timer);
+  }, [showIncorrect]);
 
   const endGame = (success: boolean) => {
     setEnd(true);
@@ -99,6 +113,9 @@ export const ActorGuess = ({
       <H2>{nameHint}</H2>
       {!end && (
         <>
+          <div>
+            Tries : {guesses.length + 1}/ {MAX_GUESSES}
+          </div>
           <div className='flex w-72'>
             <Input
               placeholder='Filter actors'
@@ -109,6 +126,15 @@ export const ActorGuess = ({
               Submit
             </Button>
           </div>
+
+          <div
+            className={`text-red-400 ${
+              showIncorrect ? 'animate-shake opacity-100' : 'opacity-0'
+            }`}
+          >
+            wrong guess
+          </div>
+
           <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
             <div className='px-2'>
               <h4 className='my-4 text-sm font-medium leading-none'>Actors</h4>
@@ -130,14 +156,17 @@ export const ActorGuess = ({
           </ScrollArea>
         </>
       )}
-      <div>
-        Tries : {guesses.length + 1} / {MAX_GUESSES}
-      </div>
 
-      {success && <H3 classes='text-green-600'>You won !</H3>}
+      {success && (
+        <H3 classes='text-green-600 animate-in zoom-in duration-300'>
+          You won !
+        </H3>
+      )}
       {end && !success && (
         <>
-          <H3 classes='text-red-600'>You lost :(</H3>
+          <H3 classes='text-red-600 animate-in zoom-in duration-300'>
+            You lost :(
+          </H3>
           <div>Maybe you will have more luck tomorrow</div>
         </>
       )}
