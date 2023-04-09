@@ -24,9 +24,10 @@ export const ActorGuess = ({
 
   const [guesses, addGuess] = useState<string[]>([]);
   const [success, setSuccess] = useState<boolean>(false);
-  const [userChoice, setUserChoice] = useState<string>();
+  const [userChoice, setUserChoice] = useState<Result>();
   const [end, setEnd] = useState<boolean>(false);
   const [showIncorrect, setShowIncorrect] = useState(false);
+  const [showList, setShowList] = useState(false);
 
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
@@ -40,19 +41,20 @@ export const ActorGuess = ({
     }
 
     const newList = filteredList.filter((actor) =>
-      actor.name.toLowerCase().includes(userInput)
+      actor.name.toLowerCase().includes(userInput.toLowerCase())
     );
     setFilteredList(newList);
   }, [userInput]);
 
   const submitChoice = () => {
+    setUserInput('');
     if (!userChoice) {
       addGuess((oldState) => [...oldState, '']);
       return;
     }
 
-    addGuess((oldState) => [...oldState, userChoice]);
-    if (userChoice === correctActor.id.toString()) {
+    addGuess((oldState) => [...oldState, userChoice.id.toString()]);
+    if (userChoice.id.toString() === correctActor.id.toString()) {
       endGame(true);
     } else {
       setShowIncorrect(true);
@@ -119,13 +121,53 @@ export const ActorGuess = ({
           <div className='flex w-72'>
             <Input
               placeholder='Filter actors'
-              onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+              onChange={(e) => {
+                setUserInput(e.target.value);
+                // setUserChoice(undefined);
+              }}
               className='max-w-[18rem] rounded-r-none'
+              value={userInput}
+              onFocus={() => {
+                console.log('input focus');
+                setShowList(true);
+              }}
             />
             <Button onClick={submitChoice} className='rounded-l-none'>
               Submit
             </Button>
           </div>
+
+          {showList && (
+            <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
+              <div className='px-2'>
+                <h4 className='my-4 text-sm leading-none text-gray-500'>
+                  Actors
+                </h4>
+                {filteredList.map((actor) => (
+                  <div key={actor.id}>
+                    <div
+                      onClick={() => {
+                        setUserInput(actor.name);
+                        setUserChoice(actor);
+                        setShowList(false);
+                      }}
+                      className={`
+                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200
+                    ${
+                      userChoice?.id.toString() == actor.id.toString()
+                        ? 'bg-teal-200'
+                        : ''
+                    }
+                    `}
+                    >
+                      {actor.name}
+                    </div>
+                    <Separator className='my-4' />
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
 
           <div
             className={`text-red-400 ${
@@ -134,26 +176,6 @@ export const ActorGuess = ({
           >
             wrong guess
           </div>
-
-          <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
-            <div className='px-2'>
-              <h4 className='my-4 text-sm font-medium leading-none'>Actors</h4>
-              {filteredList.map((actor) => (
-                <div key={actor.id}>
-                  <div
-                    onClick={() => setUserChoice(actor.id.toString())}
-                    className={`
-                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200
-                    ${userChoice == actor.id.toString() ? 'bg-teal-200' : ''}
-                    `}
-                  >
-                    {actor.name}
-                  </div>
-                  <Separator className='my-4' />
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
         </>
       )}
 
