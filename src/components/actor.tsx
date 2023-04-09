@@ -128,7 +128,6 @@ export const ActorGuess = ({
               className='max-w-[18rem] rounded-r-none'
               value={userInput}
               onFocus={() => {
-                console.log('input focus');
                 setShowList(true);
               }}
             />
@@ -138,7 +137,7 @@ export const ActorGuess = ({
           </div>
 
           {showList && (
-            <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
+            <ScrollArea className='h-96 w-72 overflow-scroll overflow-y-hidden rounded-md border border-teal-400 dark:border-slate-700'>
               <div className='px-2'>
                 <h4 className='my-4 text-sm leading-none text-gray-500'>
                   Actors
