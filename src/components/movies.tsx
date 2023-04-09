@@ -10,6 +10,8 @@ import { H2 } from './ui/titles';
 
 const MAX_GUESSES = 6;
 
+type RenderMovie = { blurred: boolean; movie: KnownFor }[];
+
 export const Movies = ({
   allMovies,
   correctMovies,
@@ -24,9 +26,7 @@ export const Movies = ({
   actorDetails: Actor;
 }) => {
   const [userInput, setUserInput] = useState('');
-  const [moviesToRender, setMoviesToRender] = useState<
-    { blurred: boolean; movie: KnownFor }[]
-  >(
+  const [moviesToRender, setMoviesToRender] = useState<RenderMovie>(
     correctMovies.map((movie) => ({
       blurred: true,
       movie: movie,
@@ -129,22 +129,17 @@ export const Movies = ({
    * Handle game ending
    */
   useEffect(() => {
-    if (
-      guesses.length == MAX_GUESSES ||
-      moviesToRender.length === correctMovies.length
-    ) {
-      // const m: { blurred: boolean; movie: KnownFor }[] = correctMovies.map(
-      //   (movie) => ({
-      //     blurred: false,
-      //     movie: movie,
-      //   })
-      // );
-      // setMoviesToRender(m);
-      // setEnd(true);
+    if (guesses.length == MAX_GUESSES) {
+      const unBlurred = correctMovies.map((movie) => ({
+        blurred: false,
+        movie: movie,
+      }));
+      setMoviesToRender(unBlurred);
+      setEnd(true);
     }
   }, [guesses]);
 
-  const playedIn = (movies: { blurred: boolean; movie: KnownFor }[]) => (
+  const playedIn = (movies: RenderMovie) => (
     <div className='flex flex-col'>
       {movies.map((item) => (
         <div key={item.movie.id} className='my-1'>
