@@ -30,13 +30,16 @@ export const Movies = ({
 
   const [guesses, addGuess] = useState<string[]>([]);
   const [userChoice, setUserChoice] = useState<string>();
+  const [showList, setShowList] = useState(false);
+
+  const [showIncorrect, setShowIncorrect] = useState(false);
 
   const throwConfetti = useConfetti();
 
   const filteredMovies = allMovies.filter(
     (movie) =>
-      movie.name?.toLowerCase().includes(userInput) ||
-      movie.title?.toLowerCase().includes(userInput)
+      movie.name?.toLowerCase().includes(userInput.toLowerCase()) ||
+      movie.title?.toLowerCase().includes(userInput.toLowerCase())
   );
 
   const handleCorrectPick = (movie: KnownFor) => {
@@ -62,7 +65,11 @@ export const Movies = ({
   };
 
   const submitChoice = () => {
-    if (!userChoice) return;
+    setUserInput('');
+    if (!userChoice) {
+      addGuess((oldState) => [...oldState, '']);
+      return;
+    }
     if (guesses.includes(userChoice)) {
       console.log('already guessed');
       return;
@@ -72,14 +79,27 @@ export const Movies = ({
     correctMovies.forEach((movie) => {
       if (movie.id.toString() === userChoice) {
         handleCorrectPick(movie);
+        return;
       } else {
         // handle incorrect pick
         // render all movies when loosing
       }
     });
+    // setShowIncorrect(true);
 
     // todo, reset userInput and userChoice ?
   };
+
+  /** remove show incorrect after 2s */
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (showIncorrect) {
+      timer = setTimeout(() => {
+        setShowIncorrect(false);
+      }, 2000);
+    }
+    return () => timer && clearTimeout(timer);
+  }, [showIncorrect]);
 
   /**
    * Handle game ending
@@ -104,6 +124,7 @@ export const Movies = ({
             height={100}
             src={`${configuration.images.base_url}/w185/${movie.backdrop_path}`}
             alt={movie.title || movie.name || 'famous movie'}
+            // add blur-sm
             className='rounded-md drop-shadow-md'
           />
         </div>
@@ -114,40 +135,65 @@ export const Movies = ({
   return (
     <>
       <H2>Round 2, guess {correctActor.gender === 1 ? 'her' : 'his'} movies</H2>
+      <div>
+        Tries : {guesses.length + 1} / {MAX_GUESSES}
+      </div>
       {!end && (
         <>
-          <Input
-            placeholder='Filter movies or tv shows'
-            onChange={(e) => setUserInput(e.target.value.toLowerCase())}
-            className='max-w-[18rem]'
-          />
-          <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-pink-400 dark:border-slate-700'>
-            <div className='px-2'>
-              <h4 className='my-4 text-sm font-medium leading-none'>Movies</h4>
-              {filteredMovies.map((movie) => (
-                <div key={movie.id}>
-                  <div
-                    onClick={() => setUserChoice(movie.id.toString())}
-                    className={`
+          <div className='flex w-72'>
+            <Input
+              className='rounded-r-none'
+              placeholder='Filter movies or tv shows'
+              onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+              value={userInput}
+              onFocus={() => {
+                setShowList(true);
+              }}
+            />
+            <Button onClick={submitChoice} className='rounded-l-none'>
+              Submit
+            </Button>
+          </div>
+          {showList && (
+            <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-pink-400 dark:border-slate-700'>
+              <div className='px-2'>
+                <h4 className='my-4 text-sm leading-none text-gray-500'>
+                  Movies
+                </h4>
+                {filteredMovies.map((movie) => (
+                  <div key={movie.id}>
+                    <div
+                      onClick={() => {
+                        setUserChoice(movie.id.toString());
+                        setUserInput(movie.title || movie.name || '');
+                        setShowList(false);
+                      }}
+                      className={`
                     cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
                     ${userChoice == movie.id.toString() ? 'bg-pink-200' : ''}
                     `}
-                  >
-                    {movie.title || movie.name}
+                    >
+                      {movie.title || movie.name}
+                    </div>
+                    <Separator className='my-4' />
                   </div>
-                  <Separator className='my-4' />
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-          <div>
-            Tries : {guesses.length + 1} / {MAX_GUESSES}
+                ))}
+              </div>
+            </ScrollArea>
+          )}
+
+          <div
+            className={`text-red-400 ${
+              showIncorrect ? 'animate-shake opacity-100' : 'opacity-0'
+            }`}
+          >
+            wrong guess
           </div>
+
           <div className='flex gap-4'>
             <Button variant='subtle' onClick={handleSkip}>
               Skip
             </Button>
-            <Button onClick={submitChoice}>Submit</Button>
           </div>
         </>
       )}

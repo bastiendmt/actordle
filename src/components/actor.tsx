@@ -81,7 +81,7 @@ export const ActorGuess = ({
     success && throwConfetti();
   };
 
-  // Debug to 2n round
+  /** Debug to 2n round */
   // useEffect(() => {
   //   endGame(true);
   // }, []);
