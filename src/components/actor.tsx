@@ -1,5 +1,6 @@
 import { Result } from '@/types/types';
 import { useConfetti } from '@/utils/useConfetti';
+import { useWrongGuess } from '@/utils/useWrongGuess';
 import { replaceAt } from '@/utils/utils';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -33,6 +34,7 @@ export const ActorGuess = ({
     correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
   );
   const throwConfetti = useConfetti();
+  const [wrongGuess, showWrongGuess] = useWrongGuess();
 
   useEffect(() => {
     if (userInput === '') {
@@ -57,7 +59,7 @@ export const ActorGuess = ({
     if (userChoice.id.toString() === correctActor.id.toString()) {
       endGame(true);
     } else {
-      setShowIncorrect(true);
+      showWrongGuess();
     }
   };
 
@@ -137,7 +139,7 @@ export const ActorGuess = ({
           </div>
 
           {showList && (
-            <ScrollArea className='h-96 w-72 overflow-scroll overflow-y-hidden rounded-md border border-teal-400 dark:border-slate-700'>
+            <ScrollArea className='h-96 w-72 overflow-scroll overflow-x-hidden rounded-md border border-teal-400 dark:border-slate-700'>
               <div className='px-2'>
                 <h4 className='my-4 text-sm leading-none text-gray-500'>
                   Actors
@@ -168,13 +170,7 @@ export const ActorGuess = ({
             </ScrollArea>
           )}
 
-          <div
-            className={`text-red-400 ${
-              showIncorrect ? 'animate-shake opacity-100' : 'opacity-0'
-            }`}
-          >
-            wrong guess
-          </div>
+          {wrongGuess}
         </>
       )}
 

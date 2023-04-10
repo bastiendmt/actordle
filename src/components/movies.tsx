@@ -1,5 +1,6 @@
 import { Actor, Configuration, KnownFor, Result } from '@/types/types';
 import { useConfetti } from '@/utils/useConfetti';
+import { useWrongGuess } from '@/utils/useWrongGuess';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Separator } from '@radix-ui/react-separator';
 import Image from 'next/image';
@@ -39,7 +40,7 @@ export const Movies = ({
   const [userChoice, setUserChoice] = useState<string>();
   const [showList, setShowList] = useState(false);
 
-  const [showIncorrect, setShowIncorrect] = useState(false);
+  const [wrongGuess, showWrongGuess] = useWrongGuess();
 
   const throwConfetti = useConfetti();
 
@@ -56,18 +57,15 @@ export const Movies = ({
     );
     match!.blurred = false;
 
-    setMoviesToRender((prev) => {
-      return prev.map((correct) => {
+    setMoviesToRender((prev) =>
+      prev.map((correct) => {
         if (correct.movie.id === movie.id) {
           return { ...correct, blurred: false };
         } else {
           return { ...correct };
         }
-      });
-    });
-    console.log(match);
-    // mutate property to unblur
-    // setMoviesToRender((prev) => [...prev, { movie, blurred: false }]);
+      })
+    );
 
     const value = correctAnswers + 1;
     addCorrectAnswers(value);
@@ -112,18 +110,8 @@ export const Movies = ({
         return;
       }
     });
-    allIncorrect && setShowIncorrect(true);
+    allIncorrect && showWrongGuess();
   };
-  /** remove show incorrect after 2s */
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (showIncorrect) {
-      timer = setTimeout(() => {
-        setShowIncorrect(false);
-      }, 2000);
-    }
-    return () => timer && clearTimeout(timer);
-  }, [showIncorrect]);
 
   /**
    * Handle game ending
@@ -183,7 +171,7 @@ export const Movies = ({
             </Button>
           </div>
           {showList && (
-            <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-pink-400 dark:border-slate-700'>
+            <ScrollArea className='h-96 w-72 overflow-scroll overflow-x-hidden rounded-md border border-pink-400 dark:border-slate-700'>
               <div className='px-2'>
                 <h4 className='my-4 text-sm leading-none text-gray-500'>
                   Movies
@@ -210,13 +198,7 @@ export const Movies = ({
             </ScrollArea>
           )}
 
-          <div
-            className={`text-red-400 ${
-              showIncorrect ? 'animate-shake opacity-100' : 'opacity-0'
-            }`}
-          >
-            wrong guess
-          </div>
+          {wrongGuess}
 
           {/* <div className='flex gap-4'>
             <Button variant='subtle' onClick={handleSkip}>
