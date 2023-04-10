@@ -21,32 +21,23 @@ export const ActorGuess = ({
   setActorFinished: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [userInput, setUserInput] = useState('');
-  const [filteredList, setFilteredList] = useState(allActors);
 
   const [guesses, addGuess] = useState<string[]>([]);
   const [success, setSuccess] = useState<boolean>(false);
   const [userChoice, setUserChoice] = useState<Result>();
   const [end, setEnd] = useState<boolean>(false);
-  const [showIncorrect, setShowIncorrect] = useState(false);
   const [showList, setShowList] = useState(false);
 
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
   );
+
   const throwConfetti = useConfetti();
   const [wrongGuess, showWrongGuess] = useWrongGuess();
 
-  useEffect(() => {
-    if (userInput === '') {
-      setFilteredList(allActors);
-      return;
-    }
-
-    const newList = filteredList.filter((actor) =>
-      actor.name.toLowerCase().includes(userInput.toLowerCase())
-    );
-    setFilteredList(newList);
-  }, [userInput]);
+  const filteredActors = allActors.filter((actor) =>
+    actor.name.toLowerCase().includes(userInput.toLowerCase())
+  );
 
   const submitChoice = () => {
     if (!userChoice) {
@@ -65,17 +56,6 @@ export const ActorGuess = ({
     setUserChoice(undefined);
     setUserInput('');
   };
-
-  /** remove show incorrect after 2s */
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (showIncorrect) {
-      timer = setTimeout(() => {
-        setShowIncorrect(false);
-      }, 2000);
-    }
-    return () => timer && clearTimeout(timer);
-  }, [showIncorrect]);
 
   const endGame = (success: boolean) => {
     setEnd(true);
@@ -127,7 +107,6 @@ export const ActorGuess = ({
               placeholder='Filter actors'
               onChange={(e) => {
                 setUserInput(e.target.value);
-                // setUserChoice(undefined);
               }}
               className='max-w-[18rem] rounded-r-none'
               value={userInput}
@@ -146,7 +125,7 @@ export const ActorGuess = ({
                 <h4 className='my-4 text-sm leading-none text-gray-500'>
                   Actors
                 </h4>
-                {filteredList.map((actor) => (
+                {filteredActors.map((actor) => (
                   <div key={actor.id}>
                     <div
                       onClick={() => {
@@ -165,7 +144,7 @@ export const ActorGuess = ({
                     >
                       {actor.name}
                     </div>
-                    <Separator className='my-4' />
+                    <Separator className='my-2' />
                   </div>
                 ))}
               </div>

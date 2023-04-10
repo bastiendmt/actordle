@@ -40,9 +40,8 @@ export const Movies = ({
   const [userChoice, setUserChoice] = useState<string>();
   const [showList, setShowList] = useState(false);
 
-  const [wrongGuess, showWrongGuess] = useWrongGuess();
-
   const throwConfetti = useConfetti();
+  const [wrongGuess, showWrongGuess] = useWrongGuess();
 
   const filteredMovies = allMovies.filter(
     (movie) =>
@@ -51,12 +50,7 @@ export const Movies = ({
   );
 
   const handleCorrectPick = (movie: KnownFor) => {
-    // filter array to find movie index
-    const match = moviesToRender.find(
-      (correct) => correct.movie.id === movie.id
-    );
-    match!.blurred = false;
-
+    // unBlur correct movie
     setMoviesToRender((prev) =>
       prev.map((correct) => {
         if (correct.movie.id === movie.id) {
@@ -130,19 +124,15 @@ export const Movies = ({
 
   const playedIn = (movies: RenderMovie) => (
     <div className='flex flex-col'>
-      {movies.map((item) => (
-        <div key={item.movie.id} className='my-1'>
-          <div>
-            {item.blurred ? '-----' : item?.movie.title || item?.movie.name}
-          </div>
+      {movies.map(({ movie, blurred }) => (
+        <div key={movie.id} className='my-1'>
+          <div>{blurred ? '-----' : movie.title || movie.name}</div>
           <Image
             width={180}
             height={100}
-            src={`${configuration.images.base_url}/w185/${item.movie.backdrop_path}`}
-            alt={item.movie.title || item.movie.name || 'famous movie'}
-            className={`rounded-md drop-shadow-md ${
-              item.blurred ? 'blur-sm' : ''
-            }`}
+            src={`${configuration.images.base_url}/w185/${movie.backdrop_path}`}
+            alt={movie.title || movie.name || 'famous movie'}
+            className={`rounded-md drop-shadow-md ${blurred ? 'blur-sm' : ''}`}
           />
         </div>
       ))}
@@ -161,7 +151,7 @@ export const Movies = ({
             <Input
               className='rounded-r-none'
               placeholder='Filter movies or tv shows'
-              onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+              onChange={(e) => setUserInput(e.target.value)}
               value={userInput}
               onFocus={() => {
                 setShowList(true);
@@ -192,7 +182,7 @@ export const Movies = ({
                     >
                       {movie.title || movie.name}
                     </div>
-                    <Separator className='my-4' />
+                    <Separator className='my-2' />
                   </div>
                 ))}
               </div>
