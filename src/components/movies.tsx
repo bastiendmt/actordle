@@ -1,5 +1,6 @@
+import { useConfetti } from '@/hooks/useConfetti';
+import { useWrongGuess } from '@/hooks/useWrongGuess';
 import { Actor, Configuration, KnownFor, Result } from '@/types/types';
-import { useConfetti } from '@/utils/useConfetti';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Separator } from '@radix-ui/react-separator';
 import Image from 'next/image';
@@ -9,6 +10,8 @@ import { Input } from './ui/input';
 import { H2 } from './ui/titles';
 
 const MAX_GUESSES = 6;
+
+type RenderMovie = { blurred: boolean; movie: KnownFor }[];
 
 export const Movies = ({
   allMovies,
@@ -24,23 +27,39 @@ export const Movies = ({
   actorDetails: Actor;
 }) => {
   const [userInput, setUserInput] = useState('');
-  const [moviesToRender, setMoviesToRender] = useState<KnownFor[]>([]);
+  const [moviesToRender, setMoviesToRender] = useState<RenderMovie>(
+    correctMovies.map((movie) => ({
+      blurred: true,
+      movie: movie,
+    }))
+  );
   const [correctAnswers, addCorrectAnswers] = useState(0);
   const [end, setEnd] = useState(false);
 
   const [guesses, addGuess] = useState<string[]>([]);
   const [userChoice, setUserChoice] = useState<string>();
+  const [showList, setShowList] = useState(false);
 
   const throwConfetti = useConfetti();
+  const [wrongGuess, showWrongGuess] = useWrongGuess();
 
   const filteredMovies = allMovies.filter(
     (movie) =>
-      movie.name?.toLowerCase().includes(userInput) ||
-      movie.title?.toLowerCase().includes(userInput)
+      movie.name?.toLowerCase().includes(userInput.toLowerCase()) ||
+      movie.title?.toLowerCase().includes(userInput.toLowerCase())
   );
 
   const handleCorrectPick = (movie: KnownFor) => {
-    setMoviesToRender((prev) => [...prev, movie]);
+    // unBlur correct movie
+    setMoviesToRender((prev) =>
+      prev.map((correct) => {
+        if (correct.movie.id === movie.id) {
+          return { ...correct, blurred: false };
+        } else {
+          return { ...correct };
+        }
+      })
+    );
 
     const value = correctAnswers + 1;
     addCorrectAnswers(value);
@@ -55,56 +74,65 @@ export const Movies = ({
     // filter movies already rendered
     const moviesToAdd = correctMovies.filter(
       (correctMovie) =>
-        !moviesToRender.some((movie) => movie.id === correctMovie.id)
+        !moviesToRender.some(({ movie }) => movie.id === correctMovie.id)
     );
 
-    setMoviesToRender((prev) => [...prev, moviesToAdd[0]]);
+    setMoviesToRender((prev) => [
+      ...prev,
+      { movie: moviesToAdd[0], blurred: false },
+    ]);
   };
 
   const submitChoice = () => {
-    if (!userChoice) return;
+    if (!userChoice) {
+      addGuess((oldState) => [...oldState, '']);
+      return;
+    }
     if (guesses.includes(userChoice)) {
       console.log('already guessed');
       return;
     }
 
     addGuess((oldState) => [...oldState, userChoice]);
+
+    let allIncorrect = true;
     correctMovies.forEach((movie) => {
       if (movie.id.toString() === userChoice) {
+        allIncorrect = false;
         handleCorrectPick(movie);
-      } else {
-        // handle incorrect pick
-        // render all movies when loosing
+        return;
       }
     });
-
-    // todo, reset userInput and userChoice ?
+    allIncorrect && showWrongGuess();
+    setUserInput('');
+    setUserChoice(undefined);
   };
 
   /**
    * Handle game ending
    */
   useEffect(() => {
-    if (
-      guesses.length == MAX_GUESSES ||
-      moviesToRender.length === correctMovies.length
-    ) {
-      setMoviesToRender(correctMovies);
+    if (guesses.length == MAX_GUESSES) {
+      const unBlurred = correctMovies.map((movie) => ({
+        blurred: false,
+        movie: movie,
+      }));
+      setMoviesToRender(unBlurred);
       setEnd(true);
     }
-  }, [guesses, moviesToRender]);
+  }, [guesses]);
 
-  const playedIn = (movies: KnownFor[]) => (
+  const playedIn = (movies: RenderMovie) => (
     <div className='flex flex-col'>
-      {movies.map((movie) => (
+      {movies.map(({ movie, blurred }) => (
         <div key={movie.id} className='my-1'>
-          <div>{movie?.title || movie?.name}</div>
+          <div>{blurred ? '-----' : movie.title || movie.name}</div>
           <Image
             width={180}
             height={100}
             src={`${configuration.images.base_url}/w185/${movie.backdrop_path}`}
             alt={movie.title || movie.name || 'famous movie'}
-            className='rounded-md drop-shadow-md'
+            className={`rounded-md drop-shadow-md ${blurred ? 'blur-sm' : ''}`}
           />
         </div>
       ))}
@@ -114,41 +142,60 @@ export const Movies = ({
   return (
     <>
       <H2>Round 2, guess {correctActor.gender === 1 ? 'her' : 'his'} movies</H2>
+      <div>
+        Tries : {guesses.length + 1} / {MAX_GUESSES}
+      </div>
       {!end && (
         <>
-          <Input
-            placeholder='Filter movies or tv shows'
-            onChange={(e) => setUserInput(e.target.value.toLowerCase())}
-            className='max-w-[18rem]'
-          />
-          <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-pink-400 dark:border-slate-700'>
-            <div className='px-2'>
-              <h4 className='my-4 text-sm font-medium leading-none'>Movies</h4>
-              {filteredMovies.map((movie) => (
-                <div key={movie.id}>
-                  <div
-                    onClick={() => setUserChoice(movie.id.toString())}
-                    className={`
+          <div className='flex w-72'>
+            <Input
+              className='rounded-r-none'
+              placeholder='Filter movies or tv shows'
+              onChange={(e) => setUserInput(e.target.value)}
+              value={userInput}
+              onFocus={() => {
+                setShowList(true);
+              }}
+            />
+            <Button onClick={submitChoice} className='rounded-l-none'>
+              Submit
+            </Button>
+          </div>
+          {showList && (
+            <ScrollArea className='h-96 w-72 overflow-scroll overflow-x-hidden rounded-md border border-pink-400 dark:border-slate-700'>
+              <div className='px-2'>
+                <h4 className='my-4 text-sm leading-none text-gray-500'>
+                  Movies
+                </h4>
+                {filteredMovies.map((movie) => (
+                  <div key={movie.id}>
+                    <div
+                      onClick={() => {
+                        setUserChoice(movie.id.toString());
+                        setUserInput(movie.title || movie.name || '');
+                        setShowList(false);
+                      }}
+                      className={`
                     cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
                     ${userChoice == movie.id.toString() ? 'bg-pink-200' : ''}
                     `}
-                  >
-                    {movie.title || movie.name}
+                    >
+                      {movie.title || movie.name}
+                    </div>
+                    <Separator className='my-2' />
                   </div>
-                  <Separator className='my-4' />
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-          <div>
-            Tries : {guesses.length + 1} / {MAX_GUESSES}
-          </div>
-          <div className='flex gap-4'>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
+
+          {wrongGuess}
+
+          {/* <div className='flex gap-4'>
             <Button variant='subtle' onClick={handleSkip}>
               Skip
             </Button>
-            <Button onClick={submitChoice}>Submit</Button>
-          </div>
+          </div> */}
         </>
       )}
       <div>

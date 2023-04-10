@@ -1,5 +1,6 @@
+import { useConfetti } from '@/hooks/useConfetti';
+import { useWrongGuess } from '@/hooks/useWrongGuess';
 import { Result } from '@/types/types';
-import { useConfetti } from '@/utils/useConfetti';
 import { replaceAt } from '@/utils/utils';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -20,42 +21,40 @@ export const ActorGuess = ({
   setActorFinished: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [userInput, setUserInput] = useState('');
-  const [filteredList, setFilteredList] = useState(allActors);
 
   const [guesses, addGuess] = useState<string[]>([]);
   const [success, setSuccess] = useState<boolean>(false);
-  const [userChoice, setUserChoice] = useState<string>();
+  const [userChoice, setUserChoice] = useState<Result>();
   const [end, setEnd] = useState<boolean>(false);
+  const [showList, setShowList] = useState(false);
 
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
   );
+
   const throwConfetti = useConfetti();
+  const [wrongGuess, showWrongGuess] = useWrongGuess();
 
-  useEffect(() => {
-    if (userInput === '') {
-      setFilteredList(allActors);
-      return;
-    }
-
-    const newList = filteredList.filter((actor) =>
-      actor.name.toLowerCase().includes(userInput)
-    );
-    setFilteredList(newList);
-  }, [userInput]);
+  const filteredActors = allActors.filter((actor) =>
+    actor.name.toLowerCase().includes(userInput.toLowerCase())
+  );
 
   const submitChoice = () => {
-    if (!userChoice) return;
-    if (guesses.includes(userChoice)) {
-      console.log('already guessed');
+    if (!userChoice) {
+      addGuess((oldState) => [...oldState, '']);
       return;
     }
-    console.log('picked: ', userChoice);
 
-    addGuess((oldState) => [...oldState, userChoice]);
-    if (userChoice === correctActor.id.toString()) {
+    addGuess((oldState) => [...oldState, userChoice.id.toString()]);
+    if (userChoice.id.toString() === correctActor.id.toString()) {
       endGame(true);
+    } else {
+      showWrongGuess();
     }
+
+    showHint(guesses.length);
+    setUserChoice(undefined);
+    setUserInput('');
   };
 
   const endGame = (success: boolean) => {
@@ -67,15 +66,14 @@ export const ActorGuess = ({
     success && throwConfetti();
   };
 
-  // Debug to 2n round
+  /** Debug to 2n round */
   // useEffect(() => {
   //   endGame(true);
   // }, []);
 
   useEffect(() => {
     if (guesses.length == MAX_GUESSES) {
-      setEnd(true);
-      endGame(false);
+      !end && endGame(false);
     }
     showHint(guesses.length);
   }, [guesses]);
@@ -96,59 +94,77 @@ export const ActorGuess = ({
     }
   };
 
-  const getHint = () => {
-    if (guesses.length > MAX_GUESSES) return;
-    addGuess((oldState) => [...oldState, '']);
-    showHint(guesses.length);
-  };
-
   return (
     <>
       <H2>{nameHint}</H2>
       {!end && (
         <>
-          <Input
-            placeholder='Filter actors'
-            onChange={(e) => setUserInput(e.target.value.toLowerCase())}
-            className='max-w-[18rem]'
-          />
-          <ScrollArea className='h-96 w-72 overflow-scroll rounded-md border border-teal-400 dark:border-slate-700'>
-            <div className='px-2'>
-              <h4 className='my-4 text-sm font-medium leading-none'>Actors</h4>
-              {filteredList.map((actor) => (
-                <div key={actor.id}>
-                  <div
-                    onClick={() => setUserChoice(actor.id.toString())}
-                    className={`
+          <div>
+            Tries : {guesses.length + 1}/ {MAX_GUESSES}
+          </div>
+          <div className='flex w-72'>
+            <Input
+              placeholder='Filter actors'
+              onChange={(e) => {
+                setUserInput(e.target.value);
+              }}
+              className='max-w-[18rem] rounded-r-none'
+              value={userInput}
+              onFocus={() => {
+                setShowList(true);
+              }}
+            />
+            <Button onClick={submitChoice} className='rounded-l-none'>
+              Submit
+            </Button>
+          </div>
+
+          {showList && (
+            <ScrollArea className='h-96 w-72 overflow-scroll overflow-x-hidden rounded-md border border-teal-400 dark:border-slate-700'>
+              <div className='px-2'>
+                <h4 className='my-4 text-sm leading-none text-gray-500'>
+                  Actors
+                </h4>
+                {filteredActors.map((actor) => (
+                  <div key={actor.id}>
+                    <div
+                      onClick={() => {
+                        setUserInput(actor.name);
+                        setUserChoice(actor);
+                        setShowList(false);
+                      }}
+                      className={`
                     cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200
-                    ${userChoice == actor.id.toString() ? 'bg-teal-200' : ''}
+                    ${
+                      userChoice?.id.toString() == actor.id.toString()
+                        ? 'bg-teal-200'
+                        : ''
+                    }
                     `}
-                  >
-                    {actor.name}
+                    >
+                      {actor.name}
+                    </div>
+                    <Separator className='my-2' />
                   </div>
-                  <Separator className='my-4' />
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
+
+          {wrongGuess}
         </>
       )}
-      <div>
-        Tries : {guesses.length + 1} / {MAX_GUESSES}
-      </div>
-      {!end && (
-        <div className='flex gap-4'>
-          <Button variant='subtle' onClick={getHint}>
-            Get a hint
-          </Button>
-          <Button onClick={submitChoice}>Submit</Button>
-        </div>
-      )}
 
-      {success && <H3 classes='text-green-600'>You won !</H3>}
+      {success && (
+        <H3 classes='text-green-600 animate-in zoom-in duration-300'>
+          You won !
+        </H3>
+      )}
       {end && !success && (
         <>
-          <H3 classes='text-red-600'>You lost :(</H3>
+          <H3 classes='text-red-600 animate-in zoom-in duration-300'>
+            You lost :(
+          </H3>
           <div>Maybe you will have more luck tomorrow</div>
         </>
       )}
