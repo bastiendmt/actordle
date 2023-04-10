@@ -14,6 +14,10 @@ export default function RootLayout({
     <html lang='en'>
       <head>
         <link rel='manifest' href='./manifest.json'></link>
+        <link
+          rel='apple-touch-startup-image'
+          href='./android-chrome-512x512.png'
+        />
       </head>
       <body>{children}</body>
     </html>
