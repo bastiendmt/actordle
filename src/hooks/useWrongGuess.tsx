@@ -14,7 +14,7 @@ export const useWrongGuess = (): [JSX.Element, () => void] => {
     return () => timer && clearTimeout(timer);
   }, [showIncorrect]);
 
-  const comp = (
+  const message = (
     <div
       className={`text-red-400 ${
         showIncorrect ? 'animate-shake opacity-100' : 'opacity-0'
@@ -24,5 +24,5 @@ export const useWrongGuess = (): [JSX.Element, () => void] => {
     </div>
   );
 
-  return [comp, () => setShowIncorrect(true)];
+  return [message, () => setShowIncorrect(true)];
 };

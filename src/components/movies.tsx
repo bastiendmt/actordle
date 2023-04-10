@@ -1,6 +1,6 @@
+import { useConfetti } from '@/hooks/useConfetti';
+import { useWrongGuess } from '@/hooks/useWrongGuess';
 import { Actor, Configuration, KnownFor, Result } from '@/types/types';
-import { useConfetti } from '@/utils/useConfetti';
-import { useWrongGuess } from '@/utils/useWrongGuess';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Separator } from '@radix-ui/react-separator';
 import Image from 'next/image';

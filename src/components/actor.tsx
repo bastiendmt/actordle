@@ -1,6 +1,6 @@
+import { useConfetti } from '@/hooks/useConfetti';
+import { useWrongGuess } from '@/hooks/useWrongGuess';
 import { Result } from '@/types/types';
-import { useConfetti } from '@/utils/useConfetti';
-import { useWrongGuess } from '@/utils/useWrongGuess';
 import { replaceAt } from '@/utils/utils';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
