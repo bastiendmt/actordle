@@ -49,7 +49,6 @@ export const ActorGuess = ({
   }, [userInput]);
 
   const submitChoice = () => {
-    setUserInput('');
     if (!userChoice) {
       addGuess((oldState) => [...oldState, '']);
       return;
@@ -61,6 +60,10 @@ export const ActorGuess = ({
     } else {
       showWrongGuess();
     }
+
+    showHint(guesses.length);
+    setUserChoice(undefined);
+    setUserInput('');
   };
 
   /** remove show incorrect after 2s */
@@ -90,8 +93,7 @@ export const ActorGuess = ({
 
   useEffect(() => {
     if (guesses.length == MAX_GUESSES) {
-      setEnd(true);
-      endGame(false);
+      !end && endGame(false);
     }
     showHint(guesses.length);
   }, [guesses]);
