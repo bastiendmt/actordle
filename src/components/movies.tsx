@@ -90,7 +90,6 @@ export const Movies = ({
   };
 
   const submitChoice = () => {
-    setUserInput('');
     if (!userChoice) {
       addGuess((oldState) => [...oldState, '']);
       return;
@@ -111,6 +110,8 @@ export const Movies = ({
       }
     });
     allIncorrect && showWrongGuess();
+    setUserInput('');
+    setUserChoice(undefined);
   };
 
   /**
