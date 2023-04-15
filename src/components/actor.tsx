@@ -100,7 +100,7 @@ export const ActorGuess = ({
       {!end && (
         <>
           <div>
-            Tries : {guesses.length + 1}/ {MAX_GUESSES}
+            Tries : {guesses.length + 1} / {MAX_GUESSES}
           </div>
           <div className='flex w-72'>
             <Input
