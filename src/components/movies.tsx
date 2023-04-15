@@ -165,7 +165,7 @@ export const Movies = ({
                 className='!absolute top-12
                z-40 h-96 w-72 overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-white drop-shadow-2xl dark:border-slate-700'
               >
-                <div className='px-2'>
+                <div className='px-3'>
                   <h4 className='my-4 text-sm leading-none text-gray-500'>
                     Movies
                   </h4>

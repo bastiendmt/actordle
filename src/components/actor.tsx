@@ -121,7 +121,7 @@ export const ActorGuess = ({
 
           {showList && (
             <ScrollArea className='h-96 w-72 overflow-scroll overflow-x-hidden rounded-md border border-teal-400 dark:border-slate-700'>
-              <div className='px-2'>
+              <div className='px-3'>
                 <h4 className='my-4 text-sm leading-none text-gray-500'>
                   Actors
                 </h4>
