@@ -147,7 +147,7 @@ export const Movies = ({
       </div>
       {!end && (
         <>
-          <div className='flex w-72'>
+          <div className='relative flex w-72'>
             <Input
               className='rounded-r-none'
               placeholder='Filter movies or tv shows'
@@ -160,34 +160,37 @@ export const Movies = ({
             <Button onClick={submitChoice} className='rounded-l-none'>
               Submit
             </Button>
-          </div>
-          {showList && (
-            <ScrollArea className='h-96 w-72 overflow-scroll overflow-x-hidden rounded-md border border-pink-400 dark:border-slate-700'>
-              <div className='px-2'>
-                <h4 className='my-4 text-sm leading-none text-gray-500'>
-                  Movies
-                </h4>
-                {filteredMovies.map((movie) => (
-                  <div key={movie.id}>
-                    <div
-                      onClick={() => {
-                        setUserChoice(movie.id.toString());
-                        setUserInput(movie.title || movie.name || '');
-                        setShowList(false);
-                      }}
-                      className={`
+            {showList && (
+              <ScrollArea
+                className='!absolute top-12
+               z-40 h-96 w-72 overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-white drop-shadow-2xl dark:border-slate-700'
+              >
+                <div className='px-2'>
+                  <h4 className='my-4 text-sm leading-none text-gray-500'>
+                    Movies
+                  </h4>
+                  {filteredMovies.map((movie) => (
+                    <div key={movie.id}>
+                      <div
+                        onClick={() => {
+                          setUserChoice(movie.id.toString());
+                          setUserInput(movie.title || movie.name || '');
+                          setShowList(false);
+                        }}
+                        className={`
                     cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
                     ${userChoice == movie.id.toString() ? 'bg-pink-200' : ''}
                     `}
-                    >
-                      {movie.title || movie.name}
+                      >
+                        {movie.title || movie.name}
+                      </div>
+                      <Separator className='my-2' />
                     </div>
-                    <Separator className='my-2' />
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-          )}
+                  ))}
+                </div>
+              </ScrollArea>
+            )}
+          </div>
 
           {wrongGuess}
 
