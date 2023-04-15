@@ -67,7 +67,7 @@ export default async function Home() {
 
   return (
     <React.StrictMode>
-      <main className='flex min-h-screen flex-col items-center gap-2 p-4'>
+      <main className='flex min-h-screen flex-col items-center gap-2 bg-zinc-100 p-4'>
         <h1 className='scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl'>
           🎬 Actordle
         </h1>

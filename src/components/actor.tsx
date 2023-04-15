@@ -109,7 +109,7 @@ export const ActorGuess = ({
                 onChange={(e) => {
                   setUserInput(e.target.value);
                 }}
-                className='max-w-[18rem] rounded-r-none'
+                className='max-w-[18rem] rounded-r-none bg-zinc-50'
                 value={userInput}
                 onFocus={() => {
                   setShowList(true);
@@ -120,7 +120,7 @@ export const ActorGuess = ({
               </Button>
             </div>
             {showList && (
-              <ScrollArea className='!absolute bottom-12 h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 bg-white dark:border-slate-700'>
+              <ScrollArea className='!absolute bottom-12 h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 bg-zinc-50 dark:border-slate-700'>
                 <div className='px-3'>
                   <h4 className='my-4 text-sm leading-none text-gray-500'>
                     Actors

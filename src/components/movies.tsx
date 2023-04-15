@@ -150,7 +150,7 @@ export const Movies = ({
           <div className='relative flex w-full max-w-xs '>
             <div className='flex flex-1'>
               <Input
-                className='rounded-r-none'
+                className='rounded-r-none bg-zinc-50'
                 placeholder='Filter movies or tv shows'
                 onChange={(e) => setUserInput(e.target.value)}
                 value={userInput}
@@ -165,7 +165,7 @@ export const Movies = ({
             {showList && (
               <ScrollArea
                 className='!absolute bottom-12
-               z-40 h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-white drop-shadow-2xl dark:border-slate-700'
+               z-40 h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-zinc-50 drop-shadow-2xl dark:border-slate-700'
               >
                 <div className='px-3'>
                   <h4 className='my-4 text-sm leading-none text-gray-500'>
