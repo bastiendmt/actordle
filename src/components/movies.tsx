@@ -147,7 +147,7 @@ export const Movies = ({
       </div>
       {!end && (
         <>
-          <div className='relative flex w-72'>
+          <div className='relative flex w-full max-w-sm'>
             <Input
               className='rounded-r-none'
               placeholder='Filter movies or tv shows'
@@ -163,7 +163,7 @@ export const Movies = ({
             {showList && (
               <ScrollArea
                 className='!absolute top-12
-               z-40 h-96 w-72 overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-white drop-shadow-2xl dark:border-slate-700'
+               z-40 h-96 w-full max-w-sm overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-white drop-shadow-2xl dark:border-slate-700'
               >
                 <div className='px-3'>
                   <h4 className='my-4 text-sm leading-none text-gray-500'>
