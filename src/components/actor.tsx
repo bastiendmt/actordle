@@ -102,7 +102,7 @@ export const ActorGuess = ({
           <div>
             Tries : {guesses.length + 1} / {MAX_GUESSES}
           </div>
-          <div className='flex w-full max-w-sm'>
+          <div className='flex w-full max-w-xs'>
             <Input
               placeholder='Filter actors'
               onChange={(e) => {
@@ -120,7 +120,7 @@ export const ActorGuess = ({
           </div>
 
           {showList && (
-            <ScrollArea className='h-96 w-full max-w-sm overflow-scroll overflow-x-hidden rounded-md border border-teal-400 dark:border-slate-700'>
+            <ScrollArea className='h-96 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 dark:border-slate-700'>
               <div className='px-3'>
                 <h4 className='my-4 text-sm leading-none text-gray-500'>
                   Actors
