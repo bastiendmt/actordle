@@ -102,38 +102,38 @@ export const ActorGuess = ({
           <div>
             Tries : {guesses.length + 1} / {MAX_GUESSES}
           </div>
-          <div className='flex w-full max-w-xs'>
-            <Input
-              placeholder='Filter actors'
-              onChange={(e) => {
-                setUserInput(e.target.value);
-              }}
-              className='max-w-[18rem] rounded-r-none'
-              value={userInput}
-              onFocus={() => {
-                setShowList(true);
-              }}
-            />
-            <Button onClick={submitChoice} className='rounded-l-none'>
-              Submit
-            </Button>
-          </div>
-
-          {showList && (
-            <ScrollArea className='h-96 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 dark:border-slate-700'>
-              <div className='px-3'>
-                <h4 className='my-4 text-sm leading-none text-gray-500'>
-                  Actors
-                </h4>
-                {filteredActors.map((actor) => (
-                  <div key={actor.id}>
-                    <div
-                      onClick={() => {
-                        setUserInput(actor.name);
-                        setUserChoice(actor);
-                        setShowList(false);
-                      }}
-                      className={`
+          <div className='relative flex w-full max-w-xs'>
+            <div className='flex flex-1'>
+              <Input
+                placeholder='Filter actors'
+                onChange={(e) => {
+                  setUserInput(e.target.value);
+                }}
+                className='max-w-[18rem] rounded-r-none'
+                value={userInput}
+                onFocus={() => {
+                  setShowList(true);
+                }}
+              />
+              <Button onClick={submitChoice} className='rounded-l-none'>
+                Submit
+              </Button>
+            </div>
+            {showList && (
+              <ScrollArea className='!absolute bottom-12 h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 bg-white dark:border-slate-700'>
+                <div className='px-3'>
+                  <h4 className='my-4 text-sm leading-none text-gray-500'>
+                    Actors
+                  </h4>
+                  {filteredActors.map((actor) => (
+                    <div key={actor.id}>
+                      <div
+                        onClick={() => {
+                          setUserInput(actor.name);
+                          setUserChoice(actor);
+                          setShowList(false);
+                        }}
+                        className={`
                     cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200
                     ${
                       userChoice?.id.toString() == actor.id.toString()
@@ -141,15 +141,16 @@ export const ActorGuess = ({
                         : ''
                     }
                     `}
-                    >
-                      {actor.name}
+                      >
+                        {actor.name}
+                      </div>
+                      <Separator className='my-2' />
                     </div>
-                    <Separator className='my-2' />
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-          )}
+                  ))}
+                </div>
+              </ScrollArea>
+            )}
+          </div>
 
           {wrongGuess}
         </>
@@ -169,7 +170,7 @@ export const ActorGuess = ({
         </>
       )}
 
-      {process.env.NODE_ENV === 'development' && (
+      {process.env.NODE_ENV === 'development' && false && (
         <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
           <i>_debug section</i>
           <strong>actor: {correctActor.name}</strong>
