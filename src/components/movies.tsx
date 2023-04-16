@@ -150,10 +150,10 @@ export const Movies = ({
           <div className='relative flex w-full max-w-xs '>
             <div className='flex flex-1'>
               <Input
-                className='rounded-r-none bg-zinc-50'
                 placeholder='Filter movies or tv shows'
-                onChange={(e) => setUserInput(e.target.value)}
+                className='rounded-r-none bg-zinc-50 text-base'
                 value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
                 onFocus={() => {
                   setShowList(true);
                 }}

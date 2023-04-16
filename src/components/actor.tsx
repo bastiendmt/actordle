@@ -106,11 +106,11 @@ export const ActorGuess = ({
             <div className='flex flex-1'>
               <Input
                 placeholder='Filter actors'
+                className='max-w-[18rem] rounded-r-none bg-zinc-50 text-base'
+                value={userInput}
                 onChange={(e) => {
                   setUserInput(e.target.value);
                 }}
-                className='max-w-[18rem] rounded-r-none bg-zinc-50'
-                value={userInput}
                 onFocus={() => {
                   setShowList(true);
                 }}
