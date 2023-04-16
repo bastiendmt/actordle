@@ -73,5 +73,35 @@
       }
     ],
     "tests": []
+  },
+  {
+    "_id": "8dee29f0-f1d3-4747-84b8-68b2bc818a4e",
+    "colId": "de0e7c86-259f-40a6-a648-54a73dff3934",
+    "containerId": "",
+    "name": "movie-credits",
+    "url": "https://api.themoviedb.org/3/person/500/movie_credits?api_key={{TMDB_API_KEY}}&language=en-US&ACTOR_ID=501",
+    "method": "GET",
+    "sortNum": 40000,
+    "created": "2023-04-16T15:57:00.247Z",
+    "modified": "2023-04-16T16:00:07.509Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "api_key",
+        "value": "{{TMDB_API_KEY}}",
+        "isPath": false
+      },
+      {
+        "name": "language",
+        "value": "en-US",
+        "isPath": false
+      },
+      {
+        "name": "ACTOR_ID",
+        "value": "501",
+        "isPath": false
+      }
+    ],
+    "tests": []
   }
 ]
