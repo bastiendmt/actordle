@@ -170,7 +170,7 @@ export const ActorGuess = ({
         </>
       )}
 
-      {process.env.NODE_ENV === 'development' && false && (
+      {process.env.NODE_ENV === 'development' && (
         <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
           <i>_debug section</i>
           <strong>actor: {correctActor.name}</strong>
