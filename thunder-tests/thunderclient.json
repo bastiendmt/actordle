@@ -1,0 +1,77 @@
+[
+  {
+    "_id": "b1c539fe-2cf2-4e67-9857-767283cadd04",
+    "colId": "de0e7c86-259f-40a6-a648-54a73dff3934",
+    "containerId": "",
+    "name": "trending/person",
+    "url": "https://api.themoviedb.org/3/trending/person/week?api_key={{TMDB_API_KEY}}",
+    "method": "GET",
+    "sortNum": 10000,
+    "created": "2023-04-16T15:32:08.419Z",
+    "modified": "2023-04-16T15:32:08.419Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "api_key",
+        "value": "{{TMDB_API_KEY}}",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "d8e3cfc7-a4fa-44ed-980f-95bad53e1331",
+    "colId": "de0e7c86-259f-40a6-a648-54a73dff3934",
+    "containerId": "",
+    "name": "person/popular",
+    "url": "https://api.themoviedb.org/3/person/popular?api_key={{TMDB_API_KEY}}&language=en-US&page=1",
+    "method": "GET",
+    "sortNum": 20000,
+    "created": "2023-04-16T15:33:17.322Z",
+    "modified": "2023-04-16T15:33:17.322Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "api_key",
+        "value": "{{TMDB_API_KEY}}",
+        "isPath": false
+      },
+      {
+        "name": "language",
+        "value": "en-US",
+        "isPath": false
+      },
+      {
+        "name": "page",
+        "value": "1",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "55ad7225-9196-4f66-9fc6-556822eb91f6",
+    "colId": "de0e7c86-259f-40a6-a648-54a73dff3934",
+    "containerId": "",
+    "name": "person/:id",
+    "url": "https://api.themoviedb.org/3/person/500?api_key={{TMDB_API_KEY}}&language=en-US",
+    "method": "GET",
+    "sortNum": 30000,
+    "created": "2023-04-16T15:34:10.157Z",
+    "modified": "2023-04-16T15:41:04.564Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "api_key",
+        "value": "{{TMDB_API_KEY}}",
+        "isPath": false
+      },
+      {
+        "name": "language",
+        "value": "en-US",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  }
+]
