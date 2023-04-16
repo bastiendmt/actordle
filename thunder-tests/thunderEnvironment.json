@@ -1,0 +1,12 @@
+[
+  {
+    "_id": "aec93a30-bf32-410e-b5e2-77981f3a567e",
+    "name": "Actordle env",
+    "default": true,
+    "sortNum": 10000,
+    "created": "2023-04-16T15:29:50.688Z",
+    "modified": "2023-04-16T15:29:50.688Z",
+    "data": [],
+    "envFile": "../.env"
+  }
+]
