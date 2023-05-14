@@ -17,7 +17,8 @@ const getActors = async (page = 1): Promise<ActorsData> => {
 
 const getActorDetails = async (actorId: number): Promise<Actor> => {
   const data = await fetch(
-    `https://api.themoviedb.org/3/person/${actorId}?api_key=${TMDB_API_KEY}&language=en-US`
+    `https://api.themoviedb.org/3/person/${actorId}?api_key=${TMDB_API_KEY}&language=en-US`,
+    { next: { revalidate: 60 * 60 * 24 } }
   );
   if (data.ok) {
     return data.json();
@@ -40,7 +41,8 @@ export default async function Home() {
     (actor) => actor.known_for_department === 'Acting'
   );
 
-  const randomIndex = new Date().getDay();
+  // const randomIndex = new Date().getDay();
+  const randomIndex = Math.floor(Math.random() * filteredActors.length);
   const randomActor = filteredActors[randomIndex];
   const imageURI = `${configuration.images.base_url}/w185/${randomActor.profile_path}`;
 
