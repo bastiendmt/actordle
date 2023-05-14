@@ -9,9 +9,13 @@ const inter = Inter({ subsets: ['latin'] });
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 const getActors = async (page = 1): Promise<ActorsData> => {
-  const data = await fetch(
-    `https://api.themoviedb.org/3/trending/person/week?api_key=${TMDB_API_KEY}`
-  );
+  const data = await fetch('http://localhost:3000/api', {
+    next: { revalidate: 60 },
+  });
+  // const data = await fetch(
+  //   // `https://api.themoviedb.org/3/trending/person/week?api_key=${TMDB_API_KEY}`
+  //   `.`
+  // );
   return data.json();
 };
 
@@ -40,7 +44,11 @@ export default async function Home() {
     (actor) => actor.known_for_department === 'Acting'
   );
 
-  const randomIndex = new Date().getDay();
+  const randomIndex = 80;
+  console.log('INDEX', randomIndex);
+  // const randomIndex = new Date().getDay();
+  //   const randomIndex = Math.floor(Math.random() * filteredActors.length);
+
   const randomActor = filteredActors[randomIndex];
   const imageURI = `${configuration.images.base_url}/w185/${randomActor.profile_path}`;
 

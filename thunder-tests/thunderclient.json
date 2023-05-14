@@ -4,16 +4,21 @@
     "colId": "de0e7c86-259f-40a6-a648-54a73dff3934",
     "containerId": "",
     "name": "trending/person",
-    "url": "https://api.themoviedb.org/3/trending/person/week?api_key={{TMDB_API_KEY}}",
+    "url": "https://api.themoviedb.org/3/trending/person/week?api_key={{TMDB_API_KEY}}&page=10",
     "method": "GET",
     "sortNum": 10000,
     "created": "2023-04-16T15:32:08.419Z",
-    "modified": "2023-04-16T15:32:08.419Z",
+    "modified": "2023-04-30T18:30:08.208Z",
     "headers": [],
     "params": [
       {
         "name": "api_key",
         "value": "{{TMDB_API_KEY}}",
+        "isPath": false
+      },
+      {
+        "name": "page",
+        "value": "10",
         "isPath": false
       }
     ],
@@ -102,6 +107,20 @@
         "isPath": false
       }
     ],
+    "tests": []
+  },
+  {
+    "_id": "00fe4c8f-2db9-43b0-9119-d136294112ea",
+    "colId": "de0e7c86-259f-40a6-a648-54a73dff3934",
+    "containerId": "",
+    "name": "/api",
+    "url": "localhost:3000/api",
+    "method": "GET",
+    "sortNum": 50000,
+    "created": "2023-04-16T16:15:38.533Z",
+    "modified": "2023-04-16T16:15:47.564Z",
+    "headers": [],
+    "params": [],
     "tests": []
   }
 ]
