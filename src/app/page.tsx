@@ -10,7 +10,7 @@ const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 const getActors = async (page = 1): Promise<ActorsData> => {
   const data = await fetch(
-    `https://api.themoviedb.org/3/trending/person/week?api_key=${TMDB_API_KEY}`
+    `https://api.themoviedb.org/3/trending/person/week?api_key=${TMDB_API_KEY}&page=${page}`
   );
   return data.json();
 };
@@ -35,10 +35,23 @@ const getConfiguration = async (): Promise<Configuration> => {
 };
 
 export default async function Home() {
+  // let actors: Result[] = [];
+
+  // for (let i = 0; i < 5; i++) {
+  //   const data = await getActors(i);
+  //   console.log(data);
+
+  //   // actors.push(...data);
+  // }
+
+  // console.log(actors);
+
   const { results: actors } = await getActors();
   const configuration = await getConfiguration();
+
   const filteredActors = actors.filter(
-    (actor) => actor.known_for_department === 'Acting'
+    (actor) =>
+      actor.known_for_department === 'Acting' && actor.known_for.length !== 0
   );
 
   // const randomIndex = new Date().getDay();
