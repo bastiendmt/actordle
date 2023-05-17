@@ -108,5 +108,30 @@
       }
     ],
     "tests": []
+  },
+  {
+    "_id": "3e4ea9f3-3666-428c-a5f0-918d033300c8",
+    "colId": "de0e7c86-259f-40a6-a648-54a73dff3934",
+    "containerId": "",
+    "name": "movie/:id",
+    "url": "https://api.themoviedb.org/3/movie/500?language=en-US&api_key={{TMDB_API_KEY}}",
+    "method": "GET",
+    "sortNum": 50000,
+    "created": "2023-05-17T20:52:44.390Z",
+    "modified": "2023-05-17T20:56:59.255Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "language",
+        "value": "en-US",
+        "isPath": false
+      },
+      {
+        "name": "api_key",
+        "value": "{{TMDB_API_KEY}}",
+        "isPath": false
+      }
+    ],
+    "tests": []
   }
 ]
