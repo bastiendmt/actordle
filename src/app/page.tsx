@@ -1,5 +1,11 @@
 import { Game } from '@/components/game';
-import { Actor, ActorsData, Configuration, KnownFor } from '@/types/types';
+import {
+  Actor,
+  ActorsData,
+  Configuration,
+  KnownFor,
+  Result,
+} from '@/types/types';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import React from 'react';
@@ -35,24 +41,20 @@ const getConfiguration = async (): Promise<Configuration> => {
 };
 
 export default async function Home() {
-  // let actors: Result[] = [];
+  let actors: Result[] = [];
 
-  // for (let i = 0; i < 5; i++) {
-  //   const data = await getActors(i);
-  //   console.log(data);
+  for (let i = 0; i < 5; i++) {
+    const data = await getActors(i);
+    if (data.results) actors.push(...data.results);
+  }
 
-  //   // actors.push(...data);
-  // }
-
-  // console.log(actors);
-
-  const { results: actors } = await getActors();
   const configuration = await getConfiguration();
 
-  const filteredActors = actors.filter(
-    (actor) =>
-      actor.known_for_department === 'Acting' && actor.known_for.length !== 0
-  );
+  const filteredActors = actors.filter((actor) => {
+    // filter ko movies
+    if (actor.known_for_department === 'Acting' && actor.known_for.length !== 0)
+      return { actor };
+  });
 
   // const randomIndex = new Date().getDay();
   const randomIndex = Math.floor(Math.random() * filteredActors.length);
