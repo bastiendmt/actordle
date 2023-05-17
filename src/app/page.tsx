@@ -16,7 +16,7 @@ const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 const getActors = async (page = 1): Promise<ActorsData> => {
   const data = await fetch(
-    `https://api.themoviedb.org/3/trending/person/week?api_key=${TMDB_API_KEY}&page=${page}`
+    `https://api.themoviedb.org/3/trending/person/day?api_key=${TMDB_API_KEY}&page=${page}`
   );
   return data.json();
 };
@@ -51,9 +51,16 @@ export default async function Home() {
   const configuration = await getConfiguration();
 
   const filteredActors = actors.filter((actor) => {
-    // filter ko movies
-    if (actor.known_for_department === 'Acting' && actor.known_for.length !== 0)
-      return { actor };
+    if (actor.known_for.some((movie) => movie.original_language === 'ko')) {
+      return;
+    }
+
+    if (
+      actor.known_for_department === 'Acting' &&
+      actor.known_for.length !== 0
+    ) {
+      return actor;
+    }
   });
 
   // const randomIndex = new Date().getDay();
@@ -64,7 +71,7 @@ export default async function Home() {
   const actorDetails = await getActorDetails(randomActor.id);
 
   const allMovies: KnownFor[] = [];
-  actors.forEach((actor) => {
+  filteredActors.forEach((actor) => {
     actor.known_for.forEach((movie) => {
       // prevent from adding the same movie to the list
       if (!allMovies.some((m) => m.id === movie.id)) {
