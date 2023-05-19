@@ -142,11 +142,11 @@ export const Movies = ({
   return (
     <>
       <H2>Round 2, guess {correctActor.gender === 1 ? 'her' : 'his'} movies</H2>
-      <div>
-        Tries : {guesses.length + 1} / {MAX_GUESSES}
-      </div>
       {!end && (
         <>
+          <div>
+            Tries : {guesses.length + 1} / {MAX_GUESSES}
+          </div>
           <div className='relative flex w-full max-w-xs '>
             <div className='flex flex-1'>
               <Input
