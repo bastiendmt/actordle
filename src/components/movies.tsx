@@ -210,13 +210,14 @@ export const Movies = ({
       {playedIn(moviesToRender)}
 
       {end && (
-        <a
-          className='underline'
-          href={`https://www.imdb.com/name/${actorDetails.imdb_id}/`}
-          target='_blank'
+        <Button
+          className='bg-amber-400 text-black hover:bg-amber-500'
+          onClick={() =>
+            window.open(`https://www.imdb.com/name/${actorDetails.imdb_id}/`)
+          }
         >
-          Find more on imdb
-        </a>
+          Find more on IMBd
+        </Button>
       )}
     </>
   );
