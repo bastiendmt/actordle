@@ -65,6 +65,7 @@ export const Movies = ({
     addCorrectAnswers(value);
     if (value === correctMovies.length) {
       throwConfetti();
+      setEnd(true);
     }
   };
 
@@ -125,8 +126,15 @@ export const Movies = ({
   const playedIn = (movies: RenderMovie) => (
     <div className='flex flex-col'>
       {movies.map(({ movie, blurred }) => (
-        <div key={movie.id} className='my-1'>
-          <div>{blurred ? '-----' : movie.title || movie.name}</div>
+        <div key={movie.id} className='my-2'>
+          {blurred ? (
+            <div className='flex justify-between text-gray-500'>
+              <span>-----</span>
+              <span>{movie.release_date?.toString().substring(0, 4)}</span>
+            </div>
+          ) : (
+            movie.title || movie.name
+          )}
           <Image
             width={180}
             height={100}
