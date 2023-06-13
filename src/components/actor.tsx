@@ -114,35 +114,39 @@ export const ActorGuess = ({
                   setShowList(true);
                 }}
               />
+              {showList && (
+                <ScrollArea className='!absolute bottom-12 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 bg-zinc-50 dark:border-slate-700'>
+                  <div className='px-3'>
+                    <h4 className='my-4 text-sm leading-none text-gray-500'>
+                      Actors
+                    </h4>
+                    {filteredActors.map((actor) => (
+                      <div key={actor.id}>
+                        <div
+                          onClick={() => submitChoice(actor)}
+                          onKeyDown={(event) =>
+                            event.key === 'Enter' && submitChoice(actor)
+                          }
+                          tabIndex={0}
+                          className={
+                            'cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200'
+                          }
+                        >
+                          {actor.name}
+                        </div>
+                        <Separator className='my-2' />
+                      </div>
+                    ))}
+                    {filteredActors.length === 0 && (
+                      <div className='p-2'>No actors found</div>
+                    )}
+                  </div>
+                </ScrollArea>
+              )}
               <Button onClick={() => submitChoice()} className='rounded-l-none'>
                 Submit
               </Button>
             </div>
-            {showList && (
-              <ScrollArea className='!absolute bottom-12 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 bg-zinc-50 dark:border-slate-700'>
-                <div className='px-3'>
-                  <h4 className='my-4 text-sm leading-none text-gray-500'>
-                    Actors
-                  </h4>
-                  {filteredActors.map((actor) => (
-                    <div key={actor.id}>
-                      <div
-                        onClick={() => submitChoice(actor)}
-                        className={
-                          'cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200'
-                        }
-                      >
-                        {actor.name}
-                      </div>
-                      <Separator className='my-2' />
-                    </div>
-                  ))}
-                  {filteredActors.length === 0 && (
-                    <div className='p-2'>No actors found</div>
-                  )}
-                </div>
-              </ScrollArea>
-            )}
           </div>
 
           {wrongGuess}

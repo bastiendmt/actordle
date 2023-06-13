@@ -165,38 +165,43 @@ export const Movies = ({
                   setShowList(true);
                 }}
               />
+              {showList && (
+                <ScrollArea
+                  className='!absolute bottom-12
+               z-40 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-zinc-50 drop-shadow-2xl dark:border-slate-700'
+                >
+                  <div className='px-3'>
+                    <h4 className='my-4 text-sm leading-none text-gray-500'>
+                      Movies
+                    </h4>
+                    {filteredMovies.map((movie) => (
+                      <div key={movie.id}>
+                        <div
+                          onClick={() => submitChoice(movie.id.toString())}
+                          onKeyDown={(event) =>
+                            event.key === 'Enter' &&
+                            submitChoice(movie.id.toString())
+                          }
+                          tabIndex={0}
+                          className='
+                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
+                    '
+                        >
+                          {movie.title || movie.name}
+                        </div>
+                        <Separator className='my-2' />
+                      </div>
+                    ))}
+                    {filteredMovies.length === 0 && (
+                      <div className='p-2'>No movies found</div>
+                    )}
+                  </div>
+                </ScrollArea>
+              )}
               <Button onClick={() => submitChoice()} className='rounded-l-none'>
                 Submit
               </Button>
             </div>
-            {showList && (
-              <ScrollArea
-                className='!absolute bottom-12
-               z-40 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-zinc-50 drop-shadow-2xl dark:border-slate-700'
-              >
-                <div className='px-3'>
-                  <h4 className='my-4 text-sm leading-none text-gray-500'>
-                    Movies
-                  </h4>
-                  {filteredMovies.map((movie) => (
-                    <div key={movie.id}>
-                      <div
-                        onClick={() => submitChoice(movie.id.toString())}
-                        className='
-                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
-                    '
-                      >
-                        {movie.title || movie.name}
-                      </div>
-                      <Separator className='my-2' />
-                    </div>
-                  ))}
-                  {filteredMovies.length === 0 && (
-                    <div className='p-2'>No movies found</div>
-                  )}
-                </div>
-              </ScrollArea>
-            )}
           </div>
 
           {wrongGuess}
