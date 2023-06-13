@@ -172,7 +172,7 @@ export const Movies = ({
             {showList && (
               <ScrollArea
                 className='!absolute bottom-12
-               z-40 h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-zinc-50 drop-shadow-2xl dark:border-slate-700'
+               z-40 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-zinc-50 drop-shadow-2xl dark:border-slate-700'
               >
                 <div className='px-3'>
                   <h4 className='my-4 text-sm leading-none text-gray-500'>
@@ -191,6 +191,9 @@ export const Movies = ({
                       <Separator className='my-2' />
                     </div>
                   ))}
+                  {filteredMovies.length === 0 && (
+                    <div className='p-2'>No movies found</div>
+                  )}
                 </div>
               </ScrollArea>
             )}
