@@ -24,7 +24,6 @@ export const ActorGuess = ({
 
   const [guesses, addGuess] = useState<string[]>([]);
   const [success, setSuccess] = useState<boolean>(false);
-  const [userChoice, setUserChoice] = useState<Result>();
   const [end, setEnd] = useState<boolean>(false);
   const [showList, setShowList] = useState(false);
 
@@ -39,21 +38,21 @@ export const ActorGuess = ({
     actor.name.toLowerCase().includes(userInput.toLowerCase())
   );
 
-  const submitChoice = () => {
-    if (!userChoice) {
+  const submitChoice = (choice?: Result) => {
+    setShowList(false);
+    if (!choice) {
       addGuess((oldState) => [...oldState, '']);
       return;
     }
 
-    addGuess((oldState) => [...oldState, userChoice.id.toString()]);
-    if (userChoice.id.toString() === correctActor.id.toString()) {
+    addGuess((oldState) => [...oldState, choice.id.toString()]);
+    if (choice.id.toString() === correctActor.id.toString()) {
       endGame(true);
     } else {
       showWrongGuess();
     }
 
     showHint(guesses.length);
-    setUserChoice(undefined);
     setUserInput('');
   };
 
@@ -115,7 +114,7 @@ export const ActorGuess = ({
                   setShowList(true);
                 }}
               />
-              <Button onClick={submitChoice} className='rounded-l-none'>
+              <Button onClick={() => submitChoice()} className='rounded-l-none'>
                 Submit
               </Button>
             </div>
@@ -128,19 +127,10 @@ export const ActorGuess = ({
                   {filteredActors.map((actor) => (
                     <div key={actor.id}>
                       <div
-                        onClick={() => {
-                          setUserInput(actor.name);
-                          setUserChoice(actor);
-                          setShowList(false);
-                        }}
-                        className={`
-                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200
-                    ${
-                      userChoice?.id.toString() == actor.id.toString()
-                        ? 'bg-teal-200'
-                        : ''
-                    }
-                    `}
+                        onClick={() => submitChoice(actor)}
+                        className={
+                          'cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200'
+                        }
                       >
                         {actor.name}
                       </div>

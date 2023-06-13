@@ -37,7 +37,6 @@ export const Movies = ({
   const [end, setEnd] = useState(false);
 
   const [guesses, addGuess] = useState<string[]>([]);
-  const [userChoice, setUserChoice] = useState<string>();
   const [showList, setShowList] = useState(false);
 
   const throwConfetti = useConfetti();
@@ -84,21 +83,22 @@ export const Movies = ({
     ]);
   };
 
-  const submitChoice = () => {
-    if (!userChoice) {
+  const submitChoice = (choice?: string) => {
+    setShowList(false);
+    if (!choice) {
       addGuess((oldState) => [...oldState, '']);
       return;
     }
-    if (guesses.includes(userChoice)) {
+    if (guesses.includes(choice)) {
       console.log('already guessed');
       return;
     }
 
-    addGuess((oldState) => [...oldState, userChoice]);
+    addGuess((oldState) => [...oldState, choice]);
 
     let allIncorrect = true;
     correctMovies.forEach((movie) => {
-      if (movie.id.toString() === userChoice) {
+      if (movie.id.toString() === choice) {
         allIncorrect = false;
         handleCorrectPick(movie);
         return;
@@ -106,7 +106,6 @@ export const Movies = ({
     });
     allIncorrect && showWrongGuess();
     setUserInput('');
-    setUserChoice(undefined);
   };
 
   /**
@@ -166,7 +165,7 @@ export const Movies = ({
                   setShowList(true);
                 }}
               />
-              <Button onClick={submitChoice} className='rounded-l-none'>
+              <Button onClick={() => submitChoice()} className='rounded-l-none'>
                 Submit
               </Button>
             </div>
@@ -182,15 +181,10 @@ export const Movies = ({
                   {filteredMovies.map((movie) => (
                     <div key={movie.id}>
                       <div
-                        onClick={() => {
-                          setUserChoice(movie.id.toString());
-                          setUserInput(movie.title || movie.name || '');
-                          setShowList(false);
-                        }}
-                        className={`
+                        onClick={() => submitChoice(movie.id.toString())}
+                        className='
                     cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
-                    ${userChoice == movie.id.toString() ? 'bg-pink-200' : ''}
-                    `}
+                    '
                       >
                         {movie.title || movie.name}
                       </div>
