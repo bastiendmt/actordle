@@ -144,7 +144,7 @@ export const ActorGuess = ({
                 </ScrollArea>
               )}
               <Button onClick={() => submitChoice()} className='rounded-l-none'>
-                Submit
+                Skip
               </Button>
             </div>
           </div>

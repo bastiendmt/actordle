@@ -123,7 +123,7 @@ export const Movies = ({
   }, [guesses]);
 
   const playedIn = (movies: RenderMovie) => (
-    <div className='flex flex-col'>
+    <div className='flex max-w-[180px] flex-col'>
       {movies.map(({ movie, blurred }) => (
         <div key={movie.id} className='my-2'>
           {blurred ? (
@@ -138,8 +138,14 @@ export const Movies = ({
             width={180}
             height={100}
             src={`${configuration.images.base_url}/w185/${movie.backdrop_path}`}
-            alt={movie.title || movie.name || 'famous movie'}
-            className={`rounded-md drop-shadow-md ${blurred ? 'blur-sm' : ''}`}
+            alt={
+              blurred
+                ? 'movie to guess'
+                : movie.title || movie.name || 'famous movie'
+            }
+            className={`rounded-md drop-shadow-md ${
+              blurred ? 'blur-sm' : 'animate-scale'
+            }`}
           />
         </div>
       ))}
@@ -147,8 +153,11 @@ export const Movies = ({
   );
 
   return (
-    <>
-      <H2>Round 2, guess {correctActor.gender === 1 ? 'her' : 'his'} movies</H2>
+    <div className='flex flex-col items-center animate-in zoom-in duration-300'>
+      <H2>
+        Round 2, guess {correctActor.gender === 1 ? 'her' : 'his'} movies and tv
+        shows
+      </H2>
       {!end && (
         <>
           <div>
@@ -199,7 +208,7 @@ export const Movies = ({
                 </ScrollArea>
               )}
               <Button onClick={() => submitChoice()} className='rounded-l-none'>
-                Submit
+                Skip
               </Button>
             </div>
           </div>
@@ -229,6 +238,6 @@ export const Movies = ({
           Find more on IMBd
         </Button>
       )}
-    </>
+    </div>
   );
 };
