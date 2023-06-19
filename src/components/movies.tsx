@@ -173,6 +173,11 @@ export const Movies = ({
                 onFocus={() => {
                   setShowList(true);
                 }}
+                onBlur={() => {
+                  setTimeout(() => {
+                    setShowList(false);
+                  }, 200);
+                }}
               />
               {showList && (
                 <ScrollArea

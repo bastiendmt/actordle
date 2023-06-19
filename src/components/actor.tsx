@@ -113,6 +113,11 @@ export const ActorGuess = ({
                 onFocus={() => {
                   setShowList(true);
                 }}
+                onBlur={() => {
+                  setTimeout(() => {
+                    setShowList(false);
+                  }, 200);
+                }}
               />
               {showList && (
                 <ScrollArea className='!absolute bottom-12 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 bg-zinc-50 dark:border-slate-700'>
