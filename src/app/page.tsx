@@ -1,5 +1,11 @@
 import { Game } from '@/components/game';
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import {
   Actor,
   ActorsData,
   Configuration,
@@ -91,7 +97,7 @@ export default async function Home() {
 
   return (
     <React.StrictMode>
-      <main className='flex min-h-screen flex-col items-center gap-2 bg-zinc-100 p-4'>
+      <main className='m-auto flex min-h-screen max-w-xs flex-col items-center gap-2 p-4'>
         <h1 className='scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl'>
           🎬 Actordle
         </h1>
@@ -114,6 +120,48 @@ export default async function Home() {
           correctMovies={correctMovies}
           configuration={configuration}
         />
+
+        <footer className=' flex w-72 flex-col items-center gap-2'>
+          <Accordion type='single' collapsible className='w-full'>
+            <AccordionItem value='item-1'>
+              <AccordionTrigger className='w-full'>
+                How to play ?
+              </AccordionTrigger>
+              <AccordionContent>
+                Guess the name of the actor based on his picture. In the second
+                round, you have to guess the movies he played in.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value='item-2'>
+              <AccordionTrigger>
+                When can I guess a new actor ?
+              </AccordionTrigger>
+              <AccordionContent>
+                Each day a new person is available to guess.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value='item-3'>
+              <AccordionTrigger>How are the data calculated ?</AccordionTrigger>
+              <AccordionContent>
+                Not all actors or movies are available in suggestion lists. Data
+                is fetched from TMDB.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value='item-3'>
+              <AccordionTrigger>Contribute</AccordionTrigger>
+              <AccordionContent>
+                Feel free to report any issue 
+                <a
+                  href='https://github.com/bastiendmt/actordle/issues'
+                  className='underline'
+                >
+                  here
+                </a>
+                .
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </footer>
       </main>
     </React.StrictMode>
   );
