@@ -235,7 +235,7 @@ export const Movies = ({
 
       {end && (
         <Button
-          className='bg-amber-400 text-black hover:bg-amber-500'
+          className='mt-4 bg-amber-400 text-black hover:bg-amber-500'
           onClick={() =>
             window.open(`https://www.imdb.com/name/${actorDetails.imdb_id}/`)
           }

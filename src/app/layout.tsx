@@ -20,7 +20,7 @@ export default function RootLayout({
           href='./android-chrome-512x512.png'
         />
       </head>
-      <body>
+      <body className='bg-zinc-100'>
         {children}
         <Analytics />
       </body>

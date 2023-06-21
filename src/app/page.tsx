@@ -1,3 +1,4 @@
+import { FAQ } from '@/components/faq';
 import { Game } from '@/components/game';
 import {
   Actor,
@@ -91,7 +92,7 @@ export default async function Home() {
 
   return (
     <React.StrictMode>
-      <main className='flex min-h-screen flex-col items-center gap-2 bg-zinc-100 p-4'>
+      <main className='m-auto flex min-h-screen max-w-xs flex-col items-center gap-2 p-4'>
         <h1 className='scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl'>
           🎬 Actordle
         </h1>
@@ -114,6 +115,9 @@ export default async function Home() {
           correctMovies={correctMovies}
           configuration={configuration}
         />
+        <footer className='flex w-72 flex-col items-center gap-2'>
+          <FAQ />
+        </footer>
       </main>
     </React.StrictMode>
   );
