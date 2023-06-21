@@ -1,6 +1,5 @@
 import { FAQ } from '@/components/faq';
 import { Game } from '@/components/game';
-
 import {
   Actor,
   ActorsData,
