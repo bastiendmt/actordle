@@ -122,6 +122,14 @@ export const Movies = ({
     }
   }, [guesses]);
 
+  /** Return variant of blurred depending of the guesses length or an animation if the movie is guessed */
+  const getBlurredClass = (blurred: boolean) => {
+    if (!blurred) return 'animate-scale';
+    const classes = ['blur-lg', 'blur-md', 'blur', 'blur-sm', 'blur-none'];
+    const index = Math.min(guesses.length, classes.length);
+    return classes[index];
+  };
+
   const playedIn = (movies: RenderMovie) => (
     <div className='flex max-w-[180px] flex-col'>
       {movies.map(({ movie, blurred }) => (
@@ -143,9 +151,7 @@ export const Movies = ({
                 ? 'movie to guess'
                 : movie.title || movie.name || 'famous movie'
             }
-            className={`rounded-md drop-shadow-md ${
-              blurred ? 'blur-sm' : 'animate-scale'
-            }`}
+            className={`rounded-md drop-shadow-md ${getBlurredClass(blurred)}`}
           />
         </div>
       ))}
