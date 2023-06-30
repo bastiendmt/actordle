@@ -28,7 +28,7 @@ export const ActorGuess = ({
   const [showList, setShowList] = useState(false);
 
   const [nameHint, setNameHint] = useState(
-    correctActor.name.replace(/[a-zA-Z0-9]/gi, '_')
+    correctActor.name.replace(/[\p{L}\p{N}]/gu, '_')
   );
 
   const throwConfetti = useConfetti();
