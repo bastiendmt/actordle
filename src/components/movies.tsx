@@ -44,8 +44,8 @@ export const Movies = ({
 
   const filteredMovies = allMovies.filter(
     (movie) =>
-      movie.name?.toLowerCase().includes(userInput.toLowerCase()) ||
-      movie.title?.toLowerCase().includes(userInput.toLowerCase())
+      movie.title?.toLowerCase().includes(userInput.toLowerCase()) ??
+      movie.name?.toLowerCase().includes(userInput.toLowerCase())
   );
 
   const handleCorrectPick = (movie: KnownFor) => {
@@ -68,21 +68,6 @@ export const Movies = ({
     }
   };
 
-  const handleSkip = () => {
-    addGuess((oldState) => [...oldState, '']);
-
-    // filter movies already rendered
-    const moviesToAdd = correctMovies.filter(
-      (correctMovie) =>
-        !moviesToRender.some(({ movie }) => movie.id === correctMovie.id)
-    );
-
-    setMoviesToRender((prev) => [
-      ...prev,
-      { movie: moviesToAdd[0], blurred: false },
-    ]);
-  };
-
   const submitChoice = (choice?: string) => {
     setShowList(false);
     if (!choice) {
@@ -101,7 +86,6 @@ export const Movies = ({
       if (movie.id.toString() === choice) {
         allIncorrect = false;
         handleCorrectPick(movie);
-        return;
       }
     });
     allIncorrect && showWrongGuess();
@@ -120,7 +104,7 @@ export const Movies = ({
       setMoviesToRender(unBlurred);
       setEnd(true);
     }
-  }, [guesses]);
+  }, [correctMovies, guesses]);
 
   /** Return variant of blurred depending of the guesses length or an animation if the movie is guessed */
   const getBlurredClass = (blurred: boolean) => {
@@ -140,7 +124,7 @@ export const Movies = ({
               <span>{movie.release_date?.toString().substring(0, 4)}</span>
             </div>
           ) : (
-            movie.title || movie.name
+            movie.title ?? movie.name
           )}
           <Image
             width={180}
@@ -149,7 +133,7 @@ export const Movies = ({
             alt={
               blurred
                 ? 'movie to guess'
-                : movie.title || movie.name || 'famous movie'
+                : movie.title ?? movie.name ?? 'famous movie'
             }
             className={`rounded-md drop-shadow-md ${getBlurredClass(blurred)}`}
           />
@@ -207,7 +191,7 @@ export const Movies = ({
                     cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
                     '
                         >
-                          {movie.title || movie.name}
+                          {movie.title ?? movie.name}
                         </div>
                         <Separator className='my-2' />
                       </div>

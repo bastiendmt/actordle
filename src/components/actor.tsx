@@ -3,7 +3,13 @@ import { useWrongGuess } from '@/hooks/useWrongGuess';
 import { Result } from '@/types/types';
 import { replaceAt } from '@/utils/utils';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Separator } from './ui/separator';
@@ -56,42 +62,48 @@ export const ActorGuess = ({
     setUserInput('');
   };
 
-  const endGame = (success: boolean) => {
-    setEnd(true);
-    setSuccess(success);
-    setNameHint(correctActor.name);
-    setActorFinished(true);
+  const endGame = useCallback(
+    (success: boolean) => {
+      setEnd(true);
+      setSuccess(success);
+      setNameHint(correctActor.name);
+      setActorFinished(true);
 
-    success && throwConfetti();
-  };
+      success && throwConfetti();
+    },
+    [correctActor.name, setActorFinished, throwConfetti]
+  );
 
   /** Debug to 2n round */
   // useEffect(() => {
   //   endGame(true);
   // }, []);
 
+  const showHint = useCallback(
+    (hint: number) => {
+      if (hint === 1) {
+        const index = 0;
+        setNameHint((hidden) =>
+          replaceAt(hidden, index, correctActor.name[index])
+        );
+      }
+      if (hint === 2) {
+        const lastName = correctActor.name.split(' ')[1];
+        const index = correctActor.name.indexOf(lastName);
+        setNameHint((hidden) =>
+          replaceAt(hidden, index, correctActor.name[index])
+        );
+      }
+    },
+    [correctActor.name]
+  );
+
   useEffect(() => {
     if (guesses.length == MAX_GUESSES) {
       !end && endGame(false);
     }
     showHint(guesses.length);
-  }, [guesses]);
-
-  const showHint = (hint: number) => {
-    if (hint === 1) {
-      const index = 0;
-      setNameHint((hidden) =>
-        replaceAt(hidden, index, correctActor.name[index])
-      );
-    }
-    if (hint === 2) {
-      const lastName = correctActor.name.split(' ')[1];
-      const index = correctActor.name.indexOf(lastName);
-      setNameHint((hidden) =>
-        replaceAt(hidden, index, correctActor.name[index])
-      );
-    }
-  };
+  }, [end, endGame, guesses, showHint]);
 
   return (
     <>
@@ -178,7 +190,7 @@ export const ActorGuess = ({
           <strong>actor: {correctActor.name}</strong>
           <div>
             {correctActor.known_for.map((movie) => (
-              <p key={movie.id}>{movie.title || movie.original_title}</p>
+              <p key={movie.id}>{movie.title ?? movie.original_title}</p>
             ))}
           </div>
           <div className='flex justify-center gap-2 p-2'>
