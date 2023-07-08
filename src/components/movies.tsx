@@ -1,6 +1,8 @@
 import { useConfetti } from '@/hooks/useConfetti';
 import { useWrongGuess } from '@/hooks/useWrongGuess';
 import { Actor, Configuration, KnownFor, Result } from '@/types/types';
+import { buildShareText } from '@/utils/buildShareText';
+import { MAX_MOVIE_GUESSES } from '@/utils/constant';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Separator } from '@radix-ui/react-separator';
 import Image from 'next/image';
@@ -8,8 +10,7 @@ import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { H2 } from './ui/titles';
-
-const MAX_GUESSES = 6;
+import { useToast } from './ui/use-toast';
 
 type RenderMovie = { blurred: boolean; movie: KnownFor }[];
 
@@ -19,13 +20,16 @@ export const Movies = ({
   correctActor,
   configuration,
   actorDetails,
+  actorFinishedIn,
 }: {
   allMovies: KnownFor[];
   correctMovies: KnownFor[];
   correctActor: Result;
   configuration: Configuration;
   actorDetails: Actor;
+  actorFinishedIn: number;
 }) => {
+  const { toast } = useToast();
   const [userInput, setUserInput] = useState('');
   const [moviesToRender, setMoviesToRender] = useState<RenderMovie>(
     correctMovies.map((movie) => ({
@@ -96,7 +100,7 @@ export const Movies = ({
    * Handle game ending
    */
   useEffect(() => {
-    if (guesses.length == MAX_GUESSES) {
+    if (guesses.length == MAX_MOVIE_GUESSES) {
       const unBlurred = correctMovies.map((movie) => ({
         blurred: false,
         movie: movie,
@@ -112,6 +116,16 @@ export const Movies = ({
     const classes = ['blur-lg', 'blur-md', 'blur', 'blur-sm', 'blur-none'];
     const index = Math.min(guesses.length, classes.length);
     return classes[index];
+  };
+
+  const shareResults = () => {
+    const text = buildShareText({
+      actorGuesses: actorFinishedIn,
+      moviesGuesses: correctAnswers,
+    });
+    navigator.clipboard.writeText(text);
+    console.log(text);
+    toast({ title: 'Results copied to clipboard !' });
   };
 
   const playedIn = (movies: RenderMovie) => (
@@ -151,7 +165,7 @@ export const Movies = ({
       {!end && (
         <>
           <div>
-            Tries : {guesses.length + 1} / {MAX_GUESSES}
+            Tries : {guesses.length + 1} / {MAX_MOVIE_GUESSES}
           </div>
           <div className='relative flex w-full max-w-xs '>
             <div className='flex flex-1'>
@@ -237,6 +251,15 @@ export const Movies = ({
       >
         Find more on IMDb
       </Button>
+
+      {end && (
+        <Button
+          className='mt-4 bg-green-600 text-white animate-in zoom-in duration-300 hover:bg-green-500'
+          onClick={shareResults}
+        >
+          Share my results
+        </Button>
+      )}
     </div>
   );
 };
