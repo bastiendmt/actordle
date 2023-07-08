@@ -223,16 +223,20 @@ export const Movies = ({
 
       {playedIn(moviesToRender)}
 
-      {end && (
-        <Button
-          className='mt-4 bg-amber-400 text-black hover:bg-amber-500'
-          onClick={() =>
-            window.open(`https://www.imdb.com/name/${actorDetails.imdb_id}/`)
-          }
-        >
-          Find more on IMBd
-        </Button>
-      )}
+      <Button
+        className='mt-8 bg-amber-400 text-black hover:bg-amber-500'
+        disabled={!end}
+        title={
+          !end
+            ? 'Button is disabled until the game is still going'
+            : 'Find more on IMDb'
+        }
+        onClick={() =>
+          window.open(`https://www.imdb.com/name/${actorDetails.imdb_id}/`)
+        }
+      >
+        Find more on IMDb
+      </Button>
     </div>
   );
 };
