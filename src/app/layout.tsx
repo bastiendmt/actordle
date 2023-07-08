@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/toaster';
 import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className='bg-zinc-100'>
         {children}
         <Analytics />
+        <Toaster />
       </body>
     </html>
   );
