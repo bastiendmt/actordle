@@ -1,6 +1,8 @@
 import { useConfetti } from '@/hooks/useConfetti';
 import { useWrongGuess } from '@/hooks/useWrongGuess';
 import { Result } from '@/types/types';
+import { buildShareText } from '@/utils/buildShareText';
+import { MAX_ACTOR_GUESSES } from '@/utils/constant';
 import { replaceAt } from '@/utils/utils';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import {
@@ -14,18 +16,18 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Separator } from './ui/separator';
 import { H2, H3 } from './ui/titles';
-
-const MAX_GUESSES = 3;
+import { useToast } from './ui/use-toast';
 
 export const ActorGuess = ({
   allActors,
   correctActor,
-  setActorFinished,
+  setActorFinishedIn,
 }: {
   allActors: Result[];
   correctActor: Result;
-  setActorFinished: Dispatch<SetStateAction<boolean>>;
+  setActorFinishedIn: Dispatch<SetStateAction<number>>;
 }) => {
+  const { toast } = useToast();
   const [userInput, setUserInput] = useState('');
 
   const [guesses, addGuess] = useState<string[]>([]);
@@ -67,11 +69,11 @@ export const ActorGuess = ({
       setEnd(true);
       setSuccess(success);
       setNameHint(correctActor.name);
-      setActorFinished(true);
+      setActorFinishedIn(guesses.length + 1);
 
       success && throwConfetti();
     },
-    [correctActor.name, setActorFinished, throwConfetti]
+    [correctActor.name, guesses.length, setActorFinishedIn, throwConfetti]
   );
 
   /** Debug to 2n round */
@@ -99,11 +101,18 @@ export const ActorGuess = ({
   );
 
   useEffect(() => {
-    if (guesses.length == MAX_GUESSES) {
+    if (guesses.length == MAX_ACTOR_GUESSES) {
       !end && endGame(false);
     }
     showHint(guesses.length);
   }, [end, endGame, guesses, showHint]);
+
+  const shareResults = () => {
+    const text = buildShareText({ actorGuesses: success ? guesses.length : 0 });
+    navigator.clipboard.writeText(text);
+    console.log(text);
+    toast({ title: 'Results copied to clipboard !' });
+  };
 
   return (
     <>
@@ -111,7 +120,7 @@ export const ActorGuess = ({
       {!end && (
         <>
           <div>
-            Tries : {guesses.length + 1} / {MAX_GUESSES}
+            Tries : {guesses.length + 1} / {MAX_ACTOR_GUESSES}
           </div>
           <div className='relative flex w-full max-w-xs'>
             <div className='flex flex-1'>
@@ -182,6 +191,15 @@ export const ActorGuess = ({
           </H3>
           <div>Maybe you will have more luck tomorrow</div>
         </>
+      )}
+
+      {end && (
+        <Button
+          className='mt-4 bg-green-600 text-white animate-in zoom-in duration-300 hover:bg-green-500'
+          onClick={shareResults}
+        >
+          Share my results
+        </Button>
       )}
 
       {process.env.NODE_ENV === 'development' && (

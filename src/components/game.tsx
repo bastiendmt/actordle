@@ -21,22 +21,23 @@ export const Game = ({
   correctMovies: KnownFor[];
   actorDetails: Actor;
 }) => {
-  const [actorFinished, setActorFinished] = useState(false);
+  const [actorFinishedIn, setActorFinishedIn] = useState(0);
 
   return (
     <>
       <ActorGuess
         allActors={allActors}
         correctActor={correctActor}
-        setActorFinished={setActorFinished}
+        setActorFinishedIn={setActorFinishedIn}
       />
-      {actorFinished && (
+      {Boolean(actorFinishedIn) && (
         <Movies
           allMovies={allMovies}
           correctMovies={correctMovies}
           correctActor={correctActor}
           actorDetails={actorDetails}
           configuration={configuration}
+          actorFinishedIn={actorFinishedIn}
         />
       )}
     </>
