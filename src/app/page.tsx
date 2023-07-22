@@ -52,6 +52,8 @@ export default async function Home() {
   const configuration = await getConfiguration();
 
   const filteredActors = actors.filter((actor) => {
+    if (!actor.profile_path) return;
+
     if (actor.known_for.some((movie) => movie.original_language === 'ko')) {
       return;
     }
