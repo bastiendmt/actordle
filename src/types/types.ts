@@ -1,6 +1,6 @@
 export interface ActorsData {
   page: number;
-  results: Result[];
+  results?: Result[];
   total_pages: number;
   total_results: number;
 }
@@ -10,7 +10,7 @@ export interface Result {
   gender: number;
   id: number;
   known_for: KnownFor[];
-  known_for_department: KnownForDepartment;
+  known_for_department: 'Acting' | 'Directing';
   name: string;
   popularity: number;
   profile_path: string;
@@ -24,7 +24,7 @@ export interface KnownFor {
   media_type: MediaType;
   name?: string;
   origin_country?: OriginCountry[];
-  original_language: OriginalLanguage;
+  original_language: string;
   original_name?: string;
   overview: string;
   poster_path: string;
@@ -45,14 +45,6 @@ export enum MediaType {
 export enum OriginCountry {
   Jp = 'JP',
   Us = 'US',
-}
-
-export enum OriginalLanguage {
-  En = 'en',
-  It = 'it',
-  Ja = 'ja',
-  Ko = 'ko',
-  Tl = 'tl',
 }
 
 export enum KnownForDepartment {

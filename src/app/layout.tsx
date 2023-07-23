@@ -7,25 +7,21 @@ export const metadata = {
   description: 'Can you guess the actor with his picture ?',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang='en'>
-      <head>
-        <link rel='manifest' href='./manifest.json'></link>
-        <link
-          rel='apple-touch-startup-image'
-          href='./android-chrome-512x512.png'
-        />
-      </head>
-      <body className='bg-zinc-100'>
-        {children}
-        <Analytics />
-        <Toaster />
-      </body>
-    </html>
-  );
-}
+const RootLayout = ({ children }: { children: React.ReactNode }) => (
+  <html lang='en'>
+    <head>
+      <link rel='manifest' href='./manifest.json'></link>
+      <link
+        rel='apple-touch-startup-image'
+        href='./android-chrome-512x512.png'
+      />
+    </head>
+    <body className='bg-zinc-100'>
+      {children}
+      <Analytics />
+      <Toaster />
+    </body>
+  </html>
+);
+
+export default RootLayout;
