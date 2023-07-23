@@ -30,7 +30,7 @@ export const FAQ = () => (
     <AccordionItem value='item-4'>
       <AccordionTrigger>Report a bug</AccordionTrigger>
       <AccordionContent>
-        Feel free to report any issue 
+        Feel free to report any issue{' '}
         <a
           href='https://github.com/bastiendmt/actordle/issues'
           className='underline'

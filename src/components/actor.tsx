@@ -109,9 +109,18 @@ export const ActorGuess = ({
 
   const shareResults = () => {
     const text = buildShareText({ actorGuesses: success ? guesses.length : 0 });
-    navigator.clipboard.writeText(text);
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast({ title: 'Results copied to clipboard !' });
+      })
+      .catch(() => {
+        toast({
+          title: 'An error has occurred',
+          description: 'Please try again later',
+        });
+      });
     console.log(text);
-    toast({ title: 'Results copied to clipboard !' });
   };
 
   return (
@@ -128,12 +137,8 @@ export const ActorGuess = ({
                 placeholder='Filter actors'
                 className='max-w-[18rem] rounded-r-none bg-zinc-50 text-base'
                 value={userInput}
-                onChange={(e) => {
-                  setUserInput(e.target.value);
-                }}
-                onFocus={() => {
-                  setShowList(true);
-                }}
+                onChange={(e) => setUserInput(e.target.value)}
+                onFocus={() => setShowList(true)}
                 onBlur={() => {
                   setTimeout(() => {
                     setShowList(false);
@@ -150,9 +155,9 @@ export const ActorGuess = ({
                       <div key={actor.id}>
                         <div
                           onClick={() => submitChoice(actor)}
-                          onKeyDown={(event) =>
-                            event.key === 'Enter' && submitChoice(actor)
-                          }
+                          onKeyDown={(event) => {
+                            event.key === 'Enter' && submitChoice(actor);
+                          }}
                           tabIndex={0}
                           className={
                             'cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200'
