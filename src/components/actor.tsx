@@ -213,7 +213,9 @@ export const ActorGuess = ({
           <strong>actor: {correctActor.name}</strong>
           <div>
             {correctActor.known_for.map((movie) => (
-              <p key={movie.id}>{movie.title ?? movie.original_title}</p>
+              <p key={movie.id}>
+                {movie.title ?? movie.original_title ?? movie.name}
+              </p>
             ))}
           </div>
           <div className='flex justify-center gap-2 p-2'>
