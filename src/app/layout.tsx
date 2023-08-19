@@ -16,7 +16,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
         href='./android-chrome-512x512.png'
       />
     </head>
-    <body className='bg-zinc-100'>
+    <body className='foreground'>
       {children}
       <Analytics />
       <Toaster />
