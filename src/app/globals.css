@@ -47,11 +47,20 @@
   --background: 0 0% 100%;
   --foreground: 222.2 47.4% 11.2%;
 
-  --primary: 222.2 47.4% 11.2%;
+  /* Delft blue */
+  --primary: 216 65% 33%;
   --primary-foreground: 210 40% 98%;
 
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
+  /* UCLA blue */
+  --secondary: 206 37% 44%;
+  --secondary-foreground: 0 96% 80%;
+
+  /* Non Photo blue */
+  --tertiary: 183 46% 74%;
+  --tertiary-foreground: 222.2 47.4% 11.2%;
+
+  /* Mint green */
+  --fourth: 164 100% 96%;
 
   --accent: 210 40% 96.1%;
   --accent-foreground: 222.2 47.4% 11.2%;
@@ -60,6 +69,11 @@
   --destructive-foreground: 210 40% 98%;
 
   --radius: 0.5rem;
+
+  --success: 131 22% 29%;
+  --failure: 358 65% 55%;
+
+  --imdb: 46.97 91.7% 52.75%;
 }
 
 * {

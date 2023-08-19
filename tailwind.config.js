@@ -17,10 +17,17 @@ module.exports = {
       'primary-foreground': 'hsl(var(--primary-foreground))',
       secondary: 'hsl(var(--secondary))',
       'secondary-foreground': 'hsl(var(--secondary-foreground))',
+      tertiary: 'hsl(var(--tertiary))',
+      'tertiary-foreground': 'hsl(var(--tertiary-foreground))',
+      fourth: 'hsl(var(--fourth))',
       accent: 'hsl(var(--accent))',
       'accent-foreground': 'hsl(var(--accent-foreground))',
       destructive: 'hsl(var(--destructive))',
       'destructive-foreground': 'hsl(var(--destructive-foreground))',
+
+      success: 'hsl(var(--success))',
+      failure: 'hsl(var(--failure))',
+      imdb: 'hsl(var(--imdb))',
     },
     extend: {
       // fontFamily: {

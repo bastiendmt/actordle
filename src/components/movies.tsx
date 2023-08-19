@@ -171,7 +171,7 @@ export const Movies = ({
             <div className='flex flex-1'>
               <Input
                 placeholder='Filter movies or tv shows'
-                className='rounded-r-none bg-zinc-50 text-base'
+                className='rounded-r-none text-base'
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 onFocus={() => {
@@ -186,7 +186,7 @@ export const Movies = ({
               {showList && (
                 <ScrollArea
                   className='!absolute bottom-12
-               z-40 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-zinc-50 drop-shadow-2xl dark:border-slate-700'
+               z-40 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-background drop-shadow-2xl dark:border-slate-700'
                 >
                   <div className='px-3'>
                     <h4 className='my-4 text-sm leading-none text-gray-500'>
@@ -202,7 +202,7 @@ export const Movies = ({
                           }
                           tabIndex={0}
                           className='
-                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
+                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-tertiary
                     '
                         >
                           {movie.title ?? movie.name}
@@ -238,7 +238,7 @@ export const Movies = ({
       {playedIn(moviesToRender)}
 
       <Button
-        className='mt-8 bg-amber-400 text-black hover:bg-amber-500'
+        className='mt-8 bg-imdb text-black hover:bg-imdb/90'
         disabled={!end}
         title={
           !end
