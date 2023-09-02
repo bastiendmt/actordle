@@ -157,7 +157,7 @@ export const Movies = ({
   );
 
   return (
-    <div className='flex flex-col items-center animate-in zoom-in duration-300'>
+    <div className='flex flex-col gap-2 items-center animate-in zoom-in duration-300'>
       <H2>
         Round 2, guess {correctActor.gender === 1 ? 'her' : 'his'} movies and tv
         shows

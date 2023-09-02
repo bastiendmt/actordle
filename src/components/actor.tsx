@@ -124,7 +124,7 @@ export const ActorGuess = ({
   };
 
   return (
-    <>
+    <div className='flex flex-col gap-2 items-center animate-in zoom-in duration-300'>
       <H2>{nameHint}</H2>
       {!end && (
         <>
@@ -229,6 +229,6 @@ export const ActorGuess = ({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
