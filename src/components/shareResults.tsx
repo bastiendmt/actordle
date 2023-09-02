@@ -5,7 +5,7 @@ export const ShareResults = ({ handleClick }: { handleClick: () => void }) => {
     <Button
       className='mt-4 animate-in zoom-in duration-300'
       onClick={handleClick}
-      variant='outline'
+      variant='tertiary'
     >
       Share my results
     </Button>

@@ -239,7 +239,7 @@ export const Movies = ({
       {playedIn(moviesToRender)}
 
       <Button
-        className='mt-8 bg-imdb text-black hover:bg-imdb/90'
+        className='mt-4 bg-imdb text-black hover:bg-imdb/90'
         disabled={!end}
         title={
           !end

@@ -202,7 +202,7 @@ export const ActorGuess = ({
       {end && <ShareResults handleClick={shareResults} />}
 
       {process.env.NODE_ENV === 'development' && (
-        <div className='flex flex-col rounded-md  p-2 align-middle bg-fourth'>
+        <div className='flex flex-col rounded-md p-2 align-middle bg-fourth'>
           <i>_debug section</i>
           <strong>actor: {correctActor.name}</strong>
           <div>
