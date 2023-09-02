@@ -17,6 +17,7 @@ import { Input } from './ui/input';
 import { Separator } from './ui/separator';
 import { H2, H3 } from './ui/titles';
 import { useToast } from './ui/use-toast';
+import { ShareResults } from './shareResults';
 
 export const ActorGuess = ({
   allActors,
@@ -31,8 +32,8 @@ export const ActorGuess = ({
   const [userInput, setUserInput] = useState('');
 
   const [guesses, addGuess] = useState<string[]>([]);
-  const [success, setSuccess] = useState<boolean>(false);
-  const [end, setEnd] = useState<boolean>(false);
+  const [success, setSuccess] = useState(false);
+  const [end, setEnd] = useState(false);
   const [showList, setShowList] = useState(false);
 
   const [nameHint, setNameHint] = useState(
@@ -124,7 +125,7 @@ export const ActorGuess = ({
   };
 
   return (
-    <>
+    <div className='flex flex-col gap-2 items-center animate-in zoom-in duration-300'>
       <H2>{nameHint}</H2>
       {!end && (
         <>
@@ -135,7 +136,7 @@ export const ActorGuess = ({
             <div className='flex flex-1'>
               <Input
                 placeholder='Filter actors'
-                className='max-w-[18rem] rounded-r-none bg-zinc-50 text-base'
+                className='max-w-[18rem] rounded-r-none text-base'
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 onFocus={() => setShowList(true)}
@@ -146,9 +147,9 @@ export const ActorGuess = ({
                 }}
               />
               {showList && (
-                <ScrollArea className='!absolute bottom-12 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 bg-zinc-50 dark:border-slate-700'>
+                <ScrollArea className='!absolute bottom-12 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 bg-background dark:border-slate-700'>
                   <div className='px-3'>
-                    <h4 className='my-4 text-sm leading-none text-gray-500'>
+                    <h4 className='my-4 text-sm leading-none text-secondary'>
                       Actors
                     </h4>
                     {filteredActors.map((actor) => (
@@ -160,7 +161,7 @@ export const ActorGuess = ({
                           }}
                           tabIndex={0}
                           className={
-                            'cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-teal-200'
+                            'cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-tertiary'
                           }
                         >
                           {actor.name}
@@ -185,30 +186,23 @@ export const ActorGuess = ({
       )}
 
       {success && (
-        <H3 classes='text-green-600 animate-in zoom-in duration-300'>
+        <H3 classes='text-primary animate-in zoom-in duration-300'>
           You won !
         </H3>
       )}
       {end && !success && (
         <>
-          <H3 classes='text-red-600 animate-in zoom-in duration-300'>
+          <H3 classes='text-failure animate-in zoom-in duration-300'>
             You lost :(
           </H3>
-          <div>Maybe you will have more luck tomorrow</div>
+          <div>Maybe you will have more luck tomorrow.</div>
         </>
       )}
 
-      {end && (
-        <Button
-          className='mt-4 bg-green-600 text-white animate-in zoom-in duration-300 hover:bg-green-500'
-          onClick={shareResults}
-        >
-          Share my results
-        </Button>
-      )}
+      {end && <ShareResults handleClick={shareResults} />}
 
       {process.env.NODE_ENV === 'development' && (
-        <div className='flex flex-col rounded-md bg-zinc-200 p-2 align-middle'>
+        <div className='flex flex-col rounded-md p-2 align-middle bg-fourth'>
           <i>_debug section</i>
           <strong>actor: {correctActor.name}</strong>
           <div>
@@ -219,15 +213,15 @@ export const ActorGuess = ({
             ))}
           </div>
           <div className='flex justify-center gap-2 p-2'>
-            <Button className='bg-emerald-400' onClick={() => endGame(true)}>
+            <Button variant='outline' onClick={() => endGame(true)}>
               WIN
             </Button>
-            <Button className='bg-red-400' onClick={() => endGame(false)}>
+            <Button variant='destructive' onClick={() => endGame(false)}>
               LOOSE
             </Button>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };

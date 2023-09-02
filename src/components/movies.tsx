@@ -11,6 +11,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { H2 } from './ui/titles';
 import { useToast } from './ui/use-toast';
+import { ShareResults } from './shareResults';
 
 type RenderMovie = { blurred: boolean; movie: KnownFor }[];
 
@@ -157,7 +158,7 @@ export const Movies = ({
   );
 
   return (
-    <div className='flex flex-col items-center animate-in zoom-in duration-300'>
+    <div className='flex flex-col gap-2 items-center animate-in zoom-in duration-300'>
       <H2>
         Round 2, guess {correctActor.gender === 1 ? 'her' : 'his'} movies and tv
         shows
@@ -171,7 +172,7 @@ export const Movies = ({
             <div className='flex flex-1'>
               <Input
                 placeholder='Filter movies or tv shows'
-                className='rounded-r-none bg-zinc-50 text-base'
+                className='rounded-r-none text-base'
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 onFocus={() => {
@@ -186,7 +187,7 @@ export const Movies = ({
               {showList && (
                 <ScrollArea
                   className='!absolute bottom-12
-               z-40 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-zinc-50 drop-shadow-2xl dark:border-slate-700'
+               z-40 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-background drop-shadow-2xl dark:border-slate-700'
                 >
                   <div className='px-3'>
                     <h4 className='my-4 text-sm leading-none text-gray-500'>
@@ -202,7 +203,7 @@ export const Movies = ({
                           }
                           tabIndex={0}
                           className='
-                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-pink-200
+                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-tertiary
                     '
                         >
                           {movie.title ?? movie.name}
@@ -238,7 +239,7 @@ export const Movies = ({
       {playedIn(moviesToRender)}
 
       <Button
-        className='mt-8 bg-amber-400 text-black hover:bg-amber-500'
+        className='mt-4 bg-imdb text-black hover:bg-imdb/90'
         disabled={!end}
         title={
           !end
@@ -252,14 +253,7 @@ export const Movies = ({
         Find more on IMDb
       </Button>
 
-      {end && (
-        <Button
-          className='mt-4 bg-green-600 text-white animate-in zoom-in duration-300 hover:bg-green-500'
-          onClick={shareResults}
-        >
-          Share my results
-        </Button>
-      )}
+      {end && <ShareResults handleClick={shareResults} />}
     </div>
   );
 };

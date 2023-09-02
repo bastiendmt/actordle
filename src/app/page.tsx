@@ -104,7 +104,7 @@ export default async function Home() {
           alt='Actor to guess'
           width={180}
           height={250}
-          className='rounded-lg drop-shadow-lg'
+          className='rounded-lg drop-shadow-lg mt-4'
         />
         <Game
           allActors={filteredActors}
