@@ -11,6 +11,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { H2 } from './ui/titles';
 import { useToast } from './ui/use-toast';
+import { ShareResults } from './shareResults';
 
 type RenderMovie = { blurred: boolean; movie: KnownFor }[];
 
@@ -252,16 +253,7 @@ export const Movies = ({
         Find more on IMDb
       </Button>
 
-      {end && (
-        // Make this a component
-        <Button
-          className='mt-4 animate-in zoom-in duration-300'
-          onClick={shareResults}
-          variant='outline'
-        >
-          Share my results
-        </Button>
-      )}
+      {end && <ShareResults handleClick={shareResults} />}
     </div>
   );
 };

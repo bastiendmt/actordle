@@ -17,6 +17,7 @@ import { Input } from './ui/input';
 import { Separator } from './ui/separator';
 import { H2, H3 } from './ui/titles';
 import { useToast } from './ui/use-toast';
+import { ShareResults } from './shareResults';
 
 export const ActorGuess = ({
   allActors,
@@ -198,15 +199,7 @@ export const ActorGuess = ({
         </>
       )}
 
-      {end && (
-        <Button
-          className='mt-4 animate-in zoom-in duration-300'
-          onClick={shareResults}
-          variant='outline'
-        >
-          Share my results
-        </Button>
-      )}
+      {end && <ShareResults handleClick={shareResults} />}
 
       {process.env.NODE_ENV === 'development' && (
         <div className='flex flex-col rounded-md  p-2 align-middle bg-fourth'>
