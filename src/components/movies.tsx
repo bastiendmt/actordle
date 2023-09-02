@@ -253,9 +253,11 @@ export const Movies = ({
       </Button>
 
       {end && (
+        // Make this a component
         <Button
-          className='mt-4 bg-green-600 text-white animate-in zoom-in duration-300 hover:bg-green-500'
+          className='mt-4 animate-in zoom-in duration-300'
           onClick={shareResults}
+          variant='outline'
         >
           Share my results
         </Button>

@@ -148,7 +148,7 @@ export const ActorGuess = ({
               {showList && (
                 <ScrollArea className='!absolute bottom-12 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 bg-background dark:border-slate-700'>
                   <div className='px-3'>
-                    <h4 className='my-4 text-sm leading-none text-gray-500'>
+                    <h4 className='my-4 text-sm leading-none text-secondary'>
                       Actors
                     </h4>
                     {filteredActors.map((actor) => (
@@ -194,14 +194,15 @@ export const ActorGuess = ({
           <H3 classes='text-failure animate-in zoom-in duration-300'>
             You lost :(
           </H3>
-          <div>Maybe you will have more luck tomorrow</div>
+          <div>Maybe you will have more luck tomorrow.</div>
         </>
       )}
 
       {end && (
         <Button
-          className='mt-4 animate-in zoom-in duration-300 hover:bg-green-500'
+          className='mt-4 animate-in zoom-in duration-300'
           onClick={shareResults}
+          variant='outline'
         >
           Share my results
         </Button>
