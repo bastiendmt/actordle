@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.6.0",
-    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@typescript-eslint/parser": "^6.1.0",
     "autoprefixer": "^10.4.14",
     "eslint-config-prettier": "^8.8.0",
