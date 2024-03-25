@@ -23,7 +23,6 @@ import { ChevronsUpDown, Check } from 'lucide-react';
 import {
   Command,
   CommandEmpty,
-  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
