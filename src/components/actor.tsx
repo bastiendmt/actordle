@@ -3,7 +3,7 @@ import { useWrongGuess } from '@/hooks/useWrongGuess';
 import { Result } from '@/types/types';
 import { buildShareText } from '@/utils/buildShareText';
 import { MAX_ACTOR_GUESSES } from '@/utils/constant';
-import { replaceAt } from '@/utils/utils';
+import { cn, replaceAt } from '@/utils/utils';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import {
   Dispatch,
@@ -18,6 +18,16 @@ import { Separator } from './ui/separator';
 import { H2, H3 } from './ui/titles';
 import { useToast } from './ui/use-toast';
 import { ShareResults } from './shareResults';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { ChevronsUpDown, Check } from 'lucide-react';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from './ui/command';
 
 export const ActorGuess = ({
   allActors,
@@ -35,6 +45,9 @@ export const ActorGuess = ({
   const [success, setSuccess] = useState(false);
   const [end, setEnd] = useState(false);
   const [showList, setShowList] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('');
 
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[\p{L}\p{N}]/gu, '_')
@@ -131,6 +144,49 @@ export const ActorGuess = ({
         <>
           <div>
             Tries : {guesses.length + 1} / {MAX_ACTOR_GUESSES}
+          </div>
+          <div className='relative flex w-full max-w-xs'>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={'outline'}
+                  role='combobox'
+                  aria-expanded={open}
+                  className='w-[200px] justify-between'
+                >
+                  {value
+                    ? filteredActors.find((actor) => actor.name === value)?.name
+                    : 'Select actor...'}
+                  <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className='w-[200px] p-0'>
+                <Command>
+                  <CommandInput placeholder='Search actor...' />
+                  <CommandEmpty>No actor found.</CommandEmpty>
+                  <CommandList>
+                    {filteredActors.map((actor) => (
+                      <CommandItem
+                        key={actor.name}
+                        value={actor.name}
+                        onSelect={(currentValue) => {
+                          setValue(currentValue === value ? '' : currentValue);
+                          setOpen(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            'mr-2 h-4 w-4',
+                            value === actor.name ? 'opacity-100' : 'opacity-0'
+                          )}
+                        />
+                        {actor.name}
+                      </CommandItem>
+                    ))}
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
           <div className='relative flex w-full max-w-xs'>
             <div className='flex flex-1'>
