@@ -156,8 +156,6 @@ export const ActorGuess = ({
                         value={actor.name}
                         onSelect={() => submitChoice(actor)}
                         onClick={() => submitChoice(actor)}
-                        className='!opacity-100 !cursor-pointer'
-                        disabled={false}
                       >
                         <CircleX
                           className={cn(
