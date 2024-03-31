@@ -4,7 +4,6 @@ import { Result } from '@/types/types';
 import { buildShareText } from '@/utils/buildShareText';
 import { MAX_ACTOR_GUESSES } from '@/utils/constant';
 import { cn, replaceAt } from '@/utils/utils';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
 import {
   Dispatch,
   SetStateAction,
@@ -13,13 +12,11 @@ import {
   useState,
 } from 'react';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Separator } from './ui/separator';
 import { H2, H3 } from './ui/titles';
 import { useToast } from './ui/use-toast';
 import { ShareResults } from './shareResults';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { ChevronsUpDown, Check } from 'lucide-react';
+import { ChevronsUpDown, CircleX } from 'lucide-react';
 import {
   Command,
   CommandEmpty,
@@ -38,15 +35,11 @@ export const ActorGuess = ({
   setActorFinishedIn: Dispatch<SetStateAction<number>>;
 }) => {
   const { toast } = useToast();
-  const [userInput, setUserInput] = useState('');
 
   const [guesses, addGuess] = useState<string[]>([]);
   const [success, setSuccess] = useState(false);
   const [end, setEnd] = useState(false);
-  const [showList, setShowList] = useState(false);
-
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('');
 
   const [nameHint, setNameHint] = useState(
     correctActor.name.replace(/[\p{L}\p{N}]/gu, '_')
@@ -55,12 +48,8 @@ export const ActorGuess = ({
   const throwConfetti = useConfetti();
   const [wrongGuess, showWrongGuess] = useWrongGuess();
 
-  const filteredActors = allActors.filter((actor) =>
-    actor.name.toLowerCase().includes(userInput.toLowerCase())
-  );
-
   const submitChoice = (choice?: Result) => {
-    setShowList(false);
+    setOpen(false);
     if (!choice) {
       addGuess((oldState) => [...oldState, '']);
       return;
@@ -74,7 +63,6 @@ export const ActorGuess = ({
     }
 
     showHint(guesses.length);
-    setUserInput('');
   };
 
   const endGame = useCallback(
@@ -144,39 +132,39 @@ export const ActorGuess = ({
           <div>
             Tries : {guesses.length + 1} / {MAX_ACTOR_GUESSES}
           </div>
-          <div className='relative flex w-full max-w-xs'>
+          <div className='relative flex w-full max-w-xs justify-center'>
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant={'outline'}
                   role='combobox'
                   aria-expanded={open}
-                  className='w-[200px] justify-between'
+                  className='w-[200px] justify-between rounded-r-none'
                 >
-                  {value
-                    ? filteredActors.find((actor) => actor.name === value)?.name
-                    : 'Select actor...'}
+                  Select actor...
                   <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className='w-[200px] p-0'>
+              <PopoverContent className='w-[200px] p-0 bg-background'>
                 <Command>
                   <CommandInput placeholder='Search actor...' />
                   <CommandEmpty>No actor found.</CommandEmpty>
-                  <CommandList>
-                    {filteredActors.map((actor) => (
+                  <CommandList className='text-secondary'>
+                    {allActors.map((actor) => (
                       <CommandItem
                         key={actor.name}
                         value={actor.name}
-                        onSelect={(currentValue) => {
-                          setValue(currentValue === value ? '' : currentValue);
-                          setOpen(false);
-                        }}
+                        onSelect={() => submitChoice(actor)}
+                        onClick={() => submitChoice(actor)}
+                        className='!opacity-100 !cursor-pointer'
+                        disabled={false}
                       >
-                        <Check
+                        <CircleX
                           className={cn(
                             'mr-2 h-4 w-4',
-                            value === actor.name ? 'opacity-100' : 'opacity-0'
+                            guesses.includes(actor.id.toString())
+                              ? 'opacity-100'
+                              : 'opacity-0'
                           )}
                         />
                         {actor.name}
@@ -186,54 +174,9 @@ export const ActorGuess = ({
                 </Command>
               </PopoverContent>
             </Popover>
-          </div>
-          <div className='relative flex w-full max-w-xs'>
-            <div className='flex flex-1'>
-              <Input
-                placeholder='Filter actors'
-                className='max-w-[18rem] rounded-r-none text-base'
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                onFocus={() => setShowList(true)}
-                onBlur={() => {
-                  setTimeout(() => {
-                    setShowList(false);
-                  }, 200);
-                }}
-              />
-              {showList && (
-                <ScrollArea className='!absolute bottom-12 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-teal-400 bg-background dark:border-slate-700'>
-                  <div className='px-3'>
-                    <h4 className='my-4 text-sm leading-none text-secondary'>
-                      Actors
-                    </h4>
-                    {filteredActors.map((actor) => (
-                      <div key={actor.id}>
-                        <div
-                          onClick={() => submitChoice(actor)}
-                          onKeyDown={(event) => {
-                            event.key === 'Enter' && submitChoice(actor);
-                          }}
-                          tabIndex={0}
-                          className={
-                            'cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-tertiary'
-                          }
-                        >
-                          {actor.name}
-                        </div>
-                        <Separator className='my-2' />
-                      </div>
-                    ))}
-                    {filteredActors.length === 0 && (
-                      <div className='p-2'>No actors found</div>
-                    )}
-                  </div>
-                </ScrollArea>
-              )}
-              <Button onClick={() => submitChoice()} className='rounded-l-none'>
-                Skip
-              </Button>
-            </div>
+            <Button onClick={() => submitChoice()} className='rounded-l-none'>
+              Skip
+            </Button>
           </div>
 
           {wrongGuess}

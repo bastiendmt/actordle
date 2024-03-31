@@ -2579,10 +2579,10 @@ lru_map@^0.3.3:
   resolved "https://registry.yarnpkg.com/lru_map/-/lru_map-0.3.3.tgz#b5c8351b9464cbd750335a79650a0ec0e56118dd"
   integrity sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==
 
-lucide-react@^0.263.0:
-  version "0.263.0"
-  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.263.0.tgz#f26463c51efebe7a0abbdef484db27ae053b9604"
-  integrity sha512-F+rHswbbI1xuDZ/OzofiJZJVlBPOIYVVST705cPdRLImJ5aOJNXYaFBPNo3qdUV0iEG/4nZeiUtLSHO2qU2ISw==
+lucide-react@^0.363.0:
+  version "0.363.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.363.0.tgz#2bb1f9d09b830dda86f5118fcd097f87247fe0e3"
+  integrity sha512-AlsfPCsXQyQx7wwsIgzcKOL9LwC498LIMAo+c0Es5PkHJa33xwmYAkkSoKoJWWWSYQEStqu58/jT4tL2gi32uQ==
 
 magic-string@^0.27.0:
   version "0.27.0"
