@@ -3,15 +3,22 @@ import { useWrongGuess } from '@/hooks/useWrongGuess';
 import { Actor, Configuration, KnownFor, Result } from '@/types/types';
 import { buildShareText } from '@/utils/buildShareText';
 import { MAX_MOVIE_GUESSES } from '@/utils/constant';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
-import { Separator } from '@radix-ui/react-separator';
+import { cn } from '@/utils/utils';
+import { ChevronsUpDown, CircleX } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { ShareResults } from './shareResults';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from './ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { H2 } from './ui/titles';
 import { useToast } from './ui/use-toast';
-import { ShareResults } from './shareResults';
 
 type RenderMovie = { blurred: boolean; movie: KnownFor }[];
 
@@ -31,7 +38,6 @@ export const Movies = ({
   actorFinishedIn: number;
 }) => {
   const { toast } = useToast();
-  const [userInput, setUserInput] = useState('');
   const [moviesToRender, setMoviesToRender] = useState<RenderMovie>(
     correctMovies.map((movie) => ({
       blurred: true,
@@ -40,18 +46,12 @@ export const Movies = ({
   );
   const [correctAnswers, addCorrectAnswers] = useState(0);
   const [end, setEnd] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const [guesses, addGuess] = useState<string[]>([]);
-  const [showList, setShowList] = useState(false);
 
   const throwConfetti = useConfetti();
   const [wrongGuess, showWrongGuess] = useWrongGuess();
-
-  const filteredMovies = allMovies.filter(
-    (movie) =>
-      movie.title?.toLowerCase().includes(userInput.toLowerCase()) ??
-      movie.name?.toLowerCase().includes(userInput.toLowerCase())
-  );
 
   const handleCorrectPick = (movie: KnownFor) => {
     // unBlur correct movie
@@ -74,7 +74,7 @@ export const Movies = ({
   };
 
   const submitChoice = (choice?: string) => {
-    setShowList(false);
+    setOpen(false);
     if (!choice) {
       addGuess((oldState) => [...oldState, '']);
       return;
@@ -94,7 +94,6 @@ export const Movies = ({
       }
     });
     allIncorrect && showWrongGuess();
-    setUserInput('');
   };
 
   /**
@@ -170,53 +169,45 @@ export const Movies = ({
           </div>
           <div className='relative flex w-full max-w-xs '>
             <div className='flex flex-1'>
-              <Input
-                placeholder='Filter movies or tv shows'
-                className='rounded-r-none text-base'
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                onFocus={() => {
-                  setShowList(true);
-                }}
-                onBlur={() => {
-                  setTimeout(() => {
-                    setShowList(false);
-                  }, 200);
-                }}
-              />
-              {showList && (
-                <ScrollArea
-                  className='!absolute bottom-12
-               z-40 max-h-80 w-full max-w-xs overflow-scroll overflow-x-hidden rounded-md border border-pink-400 bg-background drop-shadow-2xl dark:border-slate-700'
-                >
-                  <div className='px-3'>
-                    <h4 className='my-4 text-sm leading-none text-gray-500'>
-                      Movies
-                    </h4>
-                    {filteredMovies.map((movie) => (
-                      <div key={movie.id}>
-                        <div
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={'outline'}
+                    role='combobox'
+                    aria-expanded={open}
+                    className='w-[200px] justify-between rounded-r-none'
+                  >
+                    Select movies...
+                    <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className='w-[200px] p-0 bg-background'>
+                  <Command>
+                    <CommandInput placeholder='Search movies...' />
+                    <CommandEmpty>No actor found.</CommandEmpty>
+                    <CommandList className='text-secondary'>
+                      {allMovies.map((movie) => (
+                        <CommandItem
+                          key={movie.title}
+                          value={movie.title}
+                          onSelect={() => submitChoice(movie.id.toString())}
                           onClick={() => submitChoice(movie.id.toString())}
-                          onKeyDown={(event) =>
-                            event.key === 'Enter' &&
-                            submitChoice(movie.id.toString())
-                          }
-                          tabIndex={0}
-                          className='
-                    cursor-pointer rounded-md p-2 transition duration-150 hover:scale-105 hover:bg-tertiary
-                    '
                         >
-                          {movie.title ?? movie.name}
-                        </div>
-                        <Separator className='my-2' />
-                      </div>
-                    ))}
-                    {filteredMovies.length === 0 && (
-                      <div className='p-2'>No movies found</div>
-                    )}
-                  </div>
-                </ScrollArea>
-              )}
+                          <CircleX
+                            className={cn(
+                              'mr-2 h-4 w-4',
+                              guesses.includes(movie.id.toString())
+                                ? 'opacity-100'
+                                : 'opacity-0'
+                            )}
+                          />
+                          {movie.title}
+                        </CommandItem>
+                      ))}
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <Button onClick={() => submitChoice()} className='rounded-l-none'>
                 Skip
               </Button>
